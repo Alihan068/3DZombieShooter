@@ -958,15 +958,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4310467188196834, guid: 6cb63163261c5a84a8a7410cf0775135, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.6673039
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4310467188196834, guid: 6cb63163261c5a84a8a7410cf0775135, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.00000011920929
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4310467188196834, guid: 6cb63163261c5a84a8a7410cf0775135, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.2516639
+      value: 43.05
       objectReference: {fileID: 0}
     - target: {fileID: 4310467188196834, guid: 6cb63163261c5a84a8a7410cf0775135, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1072,6 +1072,9 @@ PrefabInstance:
       addedObject: {fileID: 165409809}
     - targetCorrespondingSourceObject: {fileID: 1164828658887116, guid: 6cb63163261c5a84a8a7410cf0775135, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 165409814}
+    - targetCorrespondingSourceObject: {fileID: 1164828658887116, guid: 6cb63163261c5a84a8a7410cf0775135, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 165409813}
   m_SourcePrefab: {fileID: 100100000, guid: 6cb63163261c5a84a8a7410cf0775135, type: 3}
 --- !u!1 &165409806 stripped
@@ -1115,6 +1118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyController
   target: {fileID: 741735699}
   chaseRange: 10
+  chaseTimeout: 2
 --- !u!114 &165409812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1151,6 +1155,20 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &165409814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165409806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eea2af28a13a7814baa90b8f9f0b1759, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
+  damage: 25
+  target: {fileID: 741735699}
 --- !u!1001 &173743229
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3844,7 +3862,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8997996947095583982, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.81
+      value: 47.81
       objectReference: {fileID: 0}
     - target: {fileID: 8997996947095583982, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3883,7 +3901,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4135013735270702856, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1393958951}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8616685848737228372, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 1337078167}
   m_SourcePrefab: {fileID: 100100000, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
 --- !u!4 &741735698 stripped
 Transform:
@@ -6004,6 +6025,24 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3248315488105561783, guid: 687dbafc2b84b2846b9a4a7a7dae2a7e, type: 3}
   m_PrefabInstance: {fileID: 1327922273}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1337078161 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8616685848737228372, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+  m_PrefabInstance: {fileID: 741735697}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1337078167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337078161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78df44e9ba27ee94b905d2dffa9bd266, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  healthPoints: 100
 --- !u!1001 &1357069941
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7494,7 +7533,7 @@ Transform:
   m_GameObject: {fileID: 1860413932}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.59, y: 0, z: -68.78}
+  m_LocalPosition: {x: 0, y: 0, z: 0.81}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
