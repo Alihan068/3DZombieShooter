@@ -11,6 +11,8 @@ public class Weapon : MonoBehaviour {
     [SerializeField] Ammo ammoSlot;
     [SerializeField] float timeBetweenShots = 0.5f;
 
+    [SerializeField] AmmoType ammoType;
+
     bool canShoot = true;
     // Update is called once per frame
     void Update() {
@@ -19,13 +21,17 @@ public class Weapon : MonoBehaviour {
         }
     }
 
+    private void OnEnable() {
+        canShoot = true;
+    }
+
     IEnumerator Shoot() {
         canShoot = false;
-        if (ammoSlot.GetCurrentAmmo() > 0) {
+        if (ammoSlot.GetCurrentAmmo(ammoType) > 0) {
 
             ProcessRaycast();
             PlayMuzzleFlash();
-            ammoSlot.ReduceAmmoAmount();
+            ammoSlot.ReduceAmmoAmount(ammoType);
 
         }
 

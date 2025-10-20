@@ -11,14 +11,21 @@ public class EnemyController : MonoBehaviour {
     bool isProvoked = false;
 
     NavMeshAgent navMeshAgent;
+    EnemyHealth enemyHealth;
+
     float distanceToTarget = Mathf.Infinity;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        enemyHealth = GetComponent<EnemyHealth>();
     }
 
     // Update is called once per frame
     void Update() {
+        if (enemyHealth.IsDead()) {
+            enabled = false;
+            navMeshAgent.enabled = false; 
+        }
         distanceToTarget = Vector3.Distance(transform.position, target.position);
 
         if (isProvoked) {
