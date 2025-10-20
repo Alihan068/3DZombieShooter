@@ -21,22 +21,14 @@ public class EnemyController : MonoBehaviour {
     void Update() {
         distanceToTarget = Vector3.Distance(transform.position, target.position);
 
-        if (distanceToTarget > chaseRange){
-
-            outOfRangeTimer += Time.deltaTime;
-
-            if (outOfRangeTimer >= chaseTimeout) {
-                StopChase();
-                
-            }
-        }
-        else if (isProvoked) {
+        if (isProvoked) {
             EngageTarget();
-        }
-        else if (distanceToTarget <= chaseRange) {
+        } else if (distanceToTarget <= chaseRange) {
             isProvoked = true;
         }
+
     }
+
 
     void EngageTarget() {
 
@@ -71,6 +63,10 @@ public class EnemyController : MonoBehaviour {
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x,0 , direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
     }
+
+    public void OnDamageTaken() { 
+    isProvoked = true;
+    }
     void AttackTarget() {
         GetComponent<Animator>().SetBool("attack", true);
         Debug.Log(name + (" found and attacking " + target.name));
@@ -81,4 +77,23 @@ public class EnemyController : MonoBehaviour {
         Gizmos.DrawWireSphere(transform.position, chaseRange);
 
     }
+
+    //private void OldUpdateVersion() {
+        //    if (distanceToTarget > chaseRange){
+
+        //        outOfRangeTimer += Time.deltaTime;
+
+        //        if (outOfRangeTimer >= chaseTimeout) {
+        //            StopChase();
+
+        //        }
+        //    }
+        //    else if (isProvoked) {
+        //        EngageTarget();
+        //    }
+        //    else if (distanceToTarget <= chaseRange) {
+        //        isProvoked = true;
+        //    }
+        //}
+    //}
 }

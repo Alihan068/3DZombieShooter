@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour {
@@ -6,24 +7,37 @@ public class Weapon : MonoBehaviour {
     [SerializeField] float damage = 40f;
     [SerializeField] ParticleSystem muzzleFlash;
     [SerializeField] GameObject hitEffect;
+
+    [SerializeField] Ammo ammoSlot;
+    [SerializeField] float timeBetweenShots = 0.5f;
+
+    bool canShoot = true;
     // Update is called once per frame
     void Update() {
-        if (Input.GetButtonDown("Fire1")) {
-            Shoot();
+        if (Input.GetMouseButtonDown(0)&& canShoot == true) {
+            StartCoroutine(Shoot());
         }
     }
 
-    void Shoot() {
-        ProcessRaycast();
-        PlayMuzzleFlash();
+    IEnumerator Shoot() {
+        canShoot = false;
+        if (ammoSlot.GetCurrentAmmo() > 0) {
 
+            ProcessRaycast();
+            PlayMuzzleFlash();
+            ammoSlot.ReduceAmmoAmount();
+
+        }
+
+        yield return new WaitForSeconds(timeBetweenShots);
+        canShoot=true;
     }
 
     void ProcessRaycast() {
         RaycastHit hit;
         if (Physics.Raycast(FPCamera.transform.position, FPCamera.transform.forward, out hit, range)) {
             Debug.Log("Hit!: " + hit.transform.name);
-            
+
             CreateHitImpact(hit);
 
             EnemyHealth target = hit.transform.GetComponent<EnemyHealth>();

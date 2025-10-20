@@ -8,7 +8,7 @@ public class PlayerHealth : MonoBehaviour
         healthPoints -= damage;
         Debug.Log(this.name + "took damage, remaining hp: " + healthPoints);
         if(healthPoints <= 0 ) {
-            Debug.Log("Wasted!");
+            GetComponent<DeathHandler>().HandleDeath();
         }
     }
 }
