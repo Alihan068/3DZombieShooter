@@ -3311,7 +3311,8 @@ MonoBehaviour:
   damage: 40
   muzzleFlash: {fileID: 1258433180}
   hitEffect: {fileID: 3073334848392643486, guid: ea1779f85d07b214985ad42a0aed6adb, type: 3}
-  ammoSlot: {fileID: 0}
+  ammoSlot: {fileID: 509980495}
+  timeBetweenShots: 0.5
 --- !u!114 &509980495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3735,6 +3736,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 601848049}
+  - component: {fileID: 601848050}
   m_Layer: 0
   m_Name: Weapons
   m_TagString: Untagged
@@ -3761,6 +3763,19 @@ Transform:
   - {fileID: 106129167}
   m_Father: {fileID: 1002763373}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &601848050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601848048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaf700a722899e249a09ab08df3cd600, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponSwitcher
+  currentWeaponIndex: 0
 --- !u!1001 &629767897
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4541,7 +4556,8 @@ MonoBehaviour:
   damage: 40
   muzzleFlash: {fileID: 853055723}
   hitEffect: {fileID: 3073334848392643486, guid: ea1779f85d07b214985ad42a0aed6adb, type: 3}
-  ammoSlot: {fileID: 0}
+  ammoSlot: {fileID: 828575649}
+  timeBetweenShots: 0.5
 --- !u!114 &828575649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5046,7 +5062,8 @@ MonoBehaviour:
   damage: 40
   muzzleFlash: {fileID: 583405083}
   hitEffect: {fileID: 3073334848392643486, guid: ea1779f85d07b214985ad42a0aed6adb, type: 3}
-  ammoSlot: {fileID: 0}
+  ammoSlot: {fileID: 863790922}
+  timeBetweenShots: 0.1
 --- !u!114 &863790922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8575,7 +8592,8 @@ MonoBehaviour:
   damage: 40
   muzzleFlash: {fileID: 412459055}
   hitEffect: {fileID: 3073334848392643486, guid: ea1779f85d07b214985ad42a0aed6adb, type: 3}
-  ammoSlot: {fileID: 0}
+  ammoSlot: {fileID: 1891125877}
+  timeBetweenShots: 0.5
 --- !u!114 &1891125877
 MonoBehaviour:
   m_ObjectHideFlags: 0
