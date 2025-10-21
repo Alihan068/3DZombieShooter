@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour {
 
-    [Header("Weapon Attributes")]
-    [SerializeField] float range = 100f;
-    [SerializeField] float damage = 40f;
-    [SerializeField] float sprayFactor = 0f;
-    [SerializeField] int numberOfProjectiles = 1;
-    [SerializeField] int numberOfBursts = 1;
-    [SerializeField] float timeBetweenShots = 0.5f;
-    [SerializeField] bool isAutomatic = false;
+    //[Header("Weapon Attributes")]
+    //[SerializeField] float range = 100f;
+    //[SerializeField] float damage = 40f;
+    //[SerializeField] float sprayFactor = 0f;
+    //[SerializeField] int numberOfProjectiles = 1;
+    //[SerializeField] int numberOfBursts = 1;
+    //[SerializeField] float timeBetweenShots = 0.5f;
+    //[SerializeField] bool isAutomatic = false;
+    [SerializeField] WeaponPatternSO weaponPattern;
     [SerializeField] AmmoType ammoType;
     [Header("Misc")]
     [SerializeField] Ammo ammoSlot;
@@ -21,15 +22,15 @@ public class Weapon : MonoBehaviour {
     [SerializeField] TextMeshProUGUI ammoText;
 
     [HideInInspector] public bool canShoot = true;
-    // Update is called once per frame
+
     void Update() {
         DisplayAmmo();
 
-        if (!isAutomatic && Input.GetMouseButtonDown(0) && canShoot == true) {
-            StartCoroutine(Shoot());
+        if ((weaponPattern.weaponType == WeaponPatternSO.WeaponFiringType.RayBullet) && weaponPattern.isAutomatic && Input.GetMouseButtonDown(0) && canShoot == true) {
+            StartCoroutine(RaycastShoot());
         }
-        else if (isAutomatic && Input.GetMouseButton(0) && canShoot == true) {
-            StartCoroutine(Shoot());
+        else if ((weaponPattern.weaponType == WeaponPatternSO.WeaponFiringType.ProjectileBullet) && !weaponPattern.isAutomatic && Input.GetMouseButtonDown(0) && canShoot == true) {
+            StartCoroutine(ProjectileShoot());
         }
     }
 
@@ -37,19 +38,19 @@ public class Weapon : MonoBehaviour {
         canShoot = true;
     }
 
-    IEnumerator Shoot() {
+    IEnumerator RaycastShoot() {
         canShoot = false;
         if (ammoSlot.GetCurrentAmmo(ammoType) > 0) {
 
             ProcessRaycast();
-            for (int i = 0; i < numberOfBursts; i++) {
+            for (int i = 0; i < weaponPattern.numberOfBursts; i++) {
                 PlayMuzzleFlash();
                 ammoSlot.ReduceAmmoAmount(ammoType);
                 yield return new WaitForSeconds(0.1f);
             }
         }
 
-        yield return new WaitForSeconds(timeBetweenShots);
+        yield return new WaitForSeconds(weaponPattern.timeBetweenShots);
         canShoot = true;
     }
 
@@ -57,22 +58,22 @@ public class Weapon : MonoBehaviour {
 
         Vector3 rayOrigin = FPCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
 
-        for (int i = 0; i < numberOfProjectiles; i++) {
+        for (int i = 0; i < weaponPattern.numberOfProjectiles; i++) {
 
             Vector3 direction = FPCamera.transform.forward;
-            direction.x += Random.Range(-sprayFactor, sprayFactor);
-            direction.y += Random.Range(-sprayFactor, sprayFactor);
-            Debug.DrawRay(FPCamera.transform.position, direction * range, Color.red, 5f);
+            direction.x += Random.Range(-weaponPattern.sprayFactor, weaponPattern.sprayFactor);
+            direction.y += Random.Range(-weaponPattern.sprayFactor, weaponPattern.sprayFactor);
+            Debug.DrawRay(FPCamera.transform.position, direction * weaponPattern.range, Color.red, 5f);
 
             RaycastHit hit;
-            if (Physics.Raycast(FPCamera.transform.position, direction.normalized, out hit, range)) {
+            if (Physics.Raycast(FPCamera.transform.position, direction.normalized, out hit, weaponPattern.range)) {
                 //Debug.Log("Hit!: " + hit.transform.name);
 
                 CreateHitImpact(hit);
 
                 EnemyHealth target = hit.transform.GetComponent<EnemyHealth>();
                 if (target != null) {
-                    target.TakeDamage(damage);
+                    target.TakeDamage(weaponPattern.damage);
                 }
 
             }
@@ -82,33 +83,65 @@ public class Weapon : MonoBehaviour {
         }
     }
 
-    void PlayMuzzleFlash() {
-        muzzleFlash.Play();
+    IEnumerator ProjectileShoot() {
+        canShoot = false;
+        if (ammoSlot.GetCurrentAmmo(ammoType) > 0) {
+
+            ProjectileLaunch();
+            for (int i = 0; i < weaponPattern.numberOfBursts; i++) {
+                PlayMuzzleFlash();
+                ammoSlot.ReduceAmmoAmount(ammoType);
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+
+        yield return new WaitForSeconds(weaponPattern.timeBetweenShots);
+        canShoot = true;
     }
 
-    void CreateHitImpact(RaycastHit hit) {
-        GameObject impact = Instantiate(hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
-        var main = hitEffect.GetComponentInChildren<ParticleSystem>().main;
+    void ProjectileLaunch() {
+        if (weaponPattern.projectilePrefab != null) {
 
-        float impactDurationTime = main.duration;
+            Vector3 direction = FPCamera.transform.forward;
+            direction.x += Random.Range(-weaponPattern.sprayFactor, weaponPattern.sprayFactor);
+            direction.y += Random.Range(-weaponPattern.sprayFactor, weaponPattern.sprayFactor);
 
-        Destroy(impact, impactDurationTime);
+            for (int i = 0; i < weaponPattern.numberOfProjectiles; i++) {
+                
+                GameObject projectile = Instantiate(weaponPattern.projectilePrefab, FPCamera.transform.position, FPCamera.transform.rotation);
+                Rigidbody bulletRb = projectile.GetComponent<Rigidbody>();
+                bulletRb.AddForce(direction.normalized * (weaponPattern.range / 10) , ForceMode.Impulse);
+            }
+        }
     }
 
-    void DisplayAmmo() {
-        int currentAmmo = ammoSlot.GetCurrentAmmo(ammoType);
-        ammoText.text = currentAmmo.ToString();
-    }
+        void PlayMuzzleFlash() {
+            muzzleFlash.Play();
+        }
+
+        void CreateHitImpact(RaycastHit hit) {
+            GameObject impact = Instantiate(hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
+            var main = hitEffect.GetComponentInChildren<ParticleSystem>().main;
+
+            float impactDurationTime = main.duration;
+
+            Destroy(impact, impactDurationTime);
+        }
+
+        void DisplayAmmo() {
+            int currentAmmo = ammoSlot.GetCurrentAmmo(ammoType);
+            ammoText.text = currentAmmo.ToString();
+        }
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.blue;
-        for (int i = 0; i < numberOfProjectiles; i++) {
+        for (int i = 0; i < weaponPattern.numberOfProjectiles; i++) {
             Vector3 direction = FPCamera.transform.forward;
-            direction.x += Random.Range(-sprayFactor, sprayFactor);
-            direction.y += Random.Range(-sprayFactor, sprayFactor);
+            direction.x += Random.Range(-weaponPattern.sprayFactor, weaponPattern.sprayFactor);
+            direction.y += Random.Range(-weaponPattern.sprayFactor, weaponPattern.sprayFactor);
 
             Vector3 start = FPCamera.transform.position;
-            Vector3 end = start + direction * range;
+            Vector3 end = start + direction * weaponPattern.range;
         }
     }
 }

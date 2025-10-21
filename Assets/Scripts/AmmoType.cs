@@ -5,9 +5,3 @@ public enum AmmoType {
     BouncingBomb,
 }
 
-
-    public enum WeaponFiringType {
-    RayBullet,
-    Object,
-    Particle,
-}
