@@ -3,16 +3,21 @@ using TMPro;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour {
-    [SerializeField] Camera FPCamera;
+
+    [Header("Weapon Attributes")]
     [SerializeField] float range = 100f;
     [SerializeField] float damage = 40f;
+    [SerializeField] float sprayFactor = 0f;
+    [SerializeField] int numberOfProjectiles = 1;
+    [SerializeField] int numberOfBursts = 1;
+    [SerializeField] float timeBetweenShots = 0.5f;
+    [SerializeField] bool isAutomatic = false;
+    [SerializeField] AmmoType ammoType;
+    [Header("Misc")]
+    [SerializeField] Ammo ammoSlot;
+    [SerializeField] Camera FPCamera;
     [SerializeField] ParticleSystem muzzleFlash;
     [SerializeField] GameObject hitEffect;
-
-    [SerializeField] Ammo ammoSlot;
-    [SerializeField] float timeBetweenShots = 0.5f;
-
-    [SerializeField] AmmoType ammoType;
     [SerializeField] TextMeshProUGUI ammoText;
 
     [HideInInspector] public bool canShoot = true;
@@ -20,7 +25,10 @@ public class Weapon : MonoBehaviour {
     void Update() {
         DisplayAmmo();
 
-        if (Input.GetMouseButtonDown(0)&& canShoot == true) {
+        if (!isAutomatic && Input.GetMouseButtonDown(0) && canShoot == true) {
+            StartCoroutine(Shoot());
+        }
+        else if (isAutomatic && Input.GetMouseButton(0) && canShoot == true) {
             StartCoroutine(Shoot());
         }
     }
@@ -34,32 +42,44 @@ public class Weapon : MonoBehaviour {
         if (ammoSlot.GetCurrentAmmo(ammoType) > 0) {
 
             ProcessRaycast();
-            PlayMuzzleFlash();
-            ammoSlot.ReduceAmmoAmount(ammoType);
-
+            for (int i = 0; i < numberOfBursts; i++) {
+                PlayMuzzleFlash();
+                ammoSlot.ReduceAmmoAmount(ammoType);
+                yield return new WaitForSeconds(0.1f);
+            }
         }
 
         yield return new WaitForSeconds(timeBetweenShots);
-        canShoot=true;
+        canShoot = true;
     }
 
     void ProcessRaycast() {
-        RaycastHit hit;
-        if (Physics.Raycast(FPCamera.transform.position, FPCamera.transform.forward, out hit, range)) {
-            Debug.Log("Hit!: " + hit.transform.name);
 
-            CreateHitImpact(hit);
+        Vector3 rayOrigin = FPCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.0f));
 
-            EnemyHealth target = hit.transform.GetComponent<EnemyHealth>();
-            if (target == null) {
+        for (int i = 0; i < numberOfProjectiles; i++) {
+
+            Vector3 direction = FPCamera.transform.forward;
+            direction.x += Random.Range(-sprayFactor, sprayFactor);
+            direction.y += Random.Range(-sprayFactor, sprayFactor);
+            Debug.DrawRay(FPCamera.transform.position, direction * range, Color.red, 5f);
+
+            RaycastHit hit;
+            if (Physics.Raycast(FPCamera.transform.position, direction.normalized, out hit, range)) {
+                //Debug.Log("Hit!: " + hit.transform.name);
+
+                CreateHitImpact(hit);
+
+                EnemyHealth target = hit.transform.GetComponent<EnemyHealth>();
+                if (target != null) {
+                    target.TakeDamage(damage);
+                }
+
+            }
+            else {
                 return;
             }
-            target.TakeDamage(damage);
         }
-        else {
-            return;
-        }
-
     }
 
     void PlayMuzzleFlash() {
@@ -78,5 +98,17 @@ public class Weapon : MonoBehaviour {
     void DisplayAmmo() {
         int currentAmmo = ammoSlot.GetCurrentAmmo(ammoType);
         ammoText.text = currentAmmo.ToString();
+    }
+
+    private void OnDrawGizmos() {
+        Gizmos.color = Color.blue;
+        for (int i = 0; i < numberOfProjectiles; i++) {
+            Vector3 direction = FPCamera.transform.forward;
+            direction.x += Random.Range(-sprayFactor, sprayFactor);
+            direction.y += Random.Range(-sprayFactor, sprayFactor);
+
+            Vector3 start = FPCamera.transform.position;
+            Vector3 end = start + direction * range;
+        }
     }
 }
