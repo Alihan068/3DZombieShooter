@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour {
-    [SerializeField] Transform target;
+    
     [SerializeField] float chaseRange = 10f;
     [SerializeField] float chaseTimeout = 2f;
 
@@ -10,6 +10,7 @@ public class EnemyController : MonoBehaviour {
     float outOfRangeTimer = 0f;
     bool isProvoked = false;
 
+    Transform target;
     NavMeshAgent navMeshAgent;
     EnemyHealth enemyHealth;
 
@@ -18,8 +19,8 @@ public class EnemyController : MonoBehaviour {
     void Start() {
         navMeshAgent = GetComponent<NavMeshAgent>();
         enemyHealth = GetComponent<EnemyHealth>();
+        target = FindFirstObjectByType<PlayerHealth>().transform;
     }
-
     // Update is called once per frame
     void Update() {
         if (enemyHealth.IsDead()) {
@@ -76,7 +77,7 @@ public class EnemyController : MonoBehaviour {
     }
     void AttackTarget() {
         GetComponent<Animator>().SetBool("attack", true);
-        Debug.Log(name + (" found and attacking " + target.name));
+        //Debug.Log(name + (" found and attacking " + target.name));
     }
 
     private void OnDrawGizmos() {

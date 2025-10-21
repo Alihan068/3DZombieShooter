@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour {
@@ -12,10 +13,13 @@ public class Weapon : MonoBehaviour {
     [SerializeField] float timeBetweenShots = 0.5f;
 
     [SerializeField] AmmoType ammoType;
+    [SerializeField] TextMeshProUGUI ammoText;
 
-    bool canShoot = true;
+    [HideInInspector] public bool canShoot = true;
     // Update is called once per frame
     void Update() {
+        DisplayAmmo();
+
         if (Input.GetMouseButtonDown(0)&& canShoot == true) {
             StartCoroutine(Shoot());
         }
@@ -69,5 +73,10 @@ public class Weapon : MonoBehaviour {
         float impactDurationTime = main.duration;
 
         Destroy(impact, impactDurationTime);
+    }
+
+    void DisplayAmmo() {
+        int currentAmmo = ammoSlot.GetCurrentAmmo(ammoType);
+        ammoText.text = currentAmmo.ToString();
     }
 }
