@@ -94,7 +94,7 @@ public class Weapon : MonoBehaviour {
         }
 
         if (weaponEquipSound != null) {
-            audioSource.PlayOneShot(weaponEquipSound[Random.Range(0, weaponEquipSound.Length)]);
+            audioSource.PlayOneShot(weaponEquipSound[Random.Range(0, weaponEquipSound.Length)], 0.2f);
         }
     }
 

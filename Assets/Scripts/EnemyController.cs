@@ -3,6 +3,13 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
+public enum EnemyState {
+    Idle,
+    Chasing,
+    Attacking,
+    Investigating
+}
+
 public class EnemyController : MonoBehaviour {
 
     [SerializeField] float chaseRange = 10f;
@@ -20,18 +27,21 @@ public class EnemyController : MonoBehaviour {
     NavMeshAgent navMeshAgent;
     EnemyHealth enemyHealth;
 
+    EnemyState enemyState;
+
     bool soundPlayedOnce = false;
 
     float distanceToTarget = Mathf.Infinity;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start() {
         navMeshAgent = GetComponent<NavMeshAgent>();
         enemyHealth = GetComponent<EnemyHealth>();
         target = FindFirstObjectByType<PlayerHealth>().transform;
         audioSource = GetComponent<AudioSource>();
         StartCoroutine(PlaySoundAfterDelay(10f, idleSounds));
+        enemyState = GetComponent<EnemyState>();
     }
-    // Update is called once per frame
+
     void Update() {
         if (enemyHealth.IsDead()) {
             enabled = false;
@@ -39,7 +49,7 @@ public class EnemyController : MonoBehaviour {
         }
         distanceToTarget = Vector3.Distance(transform.position, target.position);
 
-        if (distanceToTarget >= chaseRange){          
+        if (distanceToTarget >= chaseRange) {
             outOfRangeTimer += Time.deltaTime;
 
             if (outOfRangeTimer >= chaseTimeout) {
@@ -67,8 +77,26 @@ public class EnemyController : MonoBehaviour {
             AttackTarget();
         }
     }
+    bool CanSeePlayer() {
+        if (enemyHealth.IsDead()) return false;
+
+        if (distanceToTarget <= viewRadius) {
+            Vector3 directionToTarget = (target.position - transform.position).normalized;
+
+            float angleBetweenEnemyAndTarget = Vector3.Angle(transform.forward, directionToTarget);
+
+            if (angleBetweenEnemyAndTarget <= viewAngle / 2) {
+                if (!Physics.Linecast(transform.position + Vector3.up * 3f,
+                    target.position + Vector3.up * 3f, obstacleMask)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     void ChaseTarget() {
+        enemyState = EnemyState.Chasing;
         StartCoroutine(PlaySoundAfterDelay(10f, chaseSounds));
         navMeshAgent.isStopped = false;
         GetComponent<Animator>().SetBool("attack", false);
@@ -76,19 +104,20 @@ public class EnemyController : MonoBehaviour {
         navMeshAgent.SetDestination(target.position);
     }
     void StopChase() {
+        enemyState = EnemyState.Idle;
         GetComponent<Animator>().SetBool("isMoving", false);
         isProvoked = false;
         navMeshAgent.ResetPath();
-        navMeshAgent.isStopped = true;    
+        navMeshAgent.isStopped = true;
         outOfRangeTimer = 0;
     }
     IEnumerator PlaySoundAfterDelay(float delay, AudioClip[] clip) {
         if (!soundPlayedOnce) {
             soundPlayedOnce = true;
             yield return new WaitForSeconds(0.1f);
-            audioSource.PlayOneShot(clip[UnityEngine.Random.Range(0, clip.Length)]);     
+            audioSource.PlayOneShot(clip[UnityEngine.Random.Range(0, clip.Length)]);
             yield return new WaitForSeconds(delay);
-            soundPlayedOnce = false;                 
+            soundPlayedOnce = false;
         }
     }
     void FaceTarget() {
