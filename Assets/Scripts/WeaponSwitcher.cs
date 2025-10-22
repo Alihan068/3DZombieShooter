@@ -3,6 +3,7 @@ using UnityEngine;
 public class WeaponSwitcher : MonoBehaviour {
 
     [SerializeField] int currentWeaponIndex = 0;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
         SetWeaponActive();

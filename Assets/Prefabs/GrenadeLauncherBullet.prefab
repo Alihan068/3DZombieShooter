@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 6080053283687227920}
   - component: {fileID: 1737001917277817972}
   - component: {fileID: 4338348199752827463}
+  - component: {fileID: 8634231291851657600}
   m_Layer: 0
-  m_Name: grenade_launcher_40mm_grenade_prefab
+  m_Name: GrenadeLauncherBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,7 +61,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!136 &4338348199752827463
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -80,10 +81,33 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.03
-  m_Height: 0.1
+  m_Radius: 0.1
+  m_Height: 0.5
   m_Direction: 2
-  m_Center: {x: 0, y: 0, z: 0.03}
+  m_Center: {x: 0, y: 0, z: 0.1}
+--- !u!114 &8634231291851657600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4671542021936441290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62c1e5d094ef4de4995ceca5c559361b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Grenade
+  fuseTime: 2
+  radius: 5
+  explosionForce: 700
+  upwardsModifier: 1
+  maxDamage: 100
+  affectedLayers:
+    serializedVersion: 2
+    m_Bits: 384
+  explosionEffectPrefab: {fileID: 0}
+  explosionSfx: {fileID: 0}
+  destroyAfter: 5
 --- !u!1001 &8639567673826255410
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -97,12 +121,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: d654bcd5c6c424a49bfe5e9030242fb6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: d654bcd5c6c424a49bfe5e9030242fb6, type: 3}
       propertyPath: m_LocalScale.y
-      value: 99.99997
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: d654bcd5c6c424a49bfe5e9030242fb6, type: 3}
       propertyPath: m_LocalScale.z
-      value: 99.99997
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: d654bcd5c6c424a49bfe5e9030242fb6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -143,6 +171,10 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: d654bcd5c6c424a49bfe5e9030242fb6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: d654bcd5c6c424a49bfe5e9030242fb6, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -1504981713932161579, guid: d654bcd5c6c424a49bfe5e9030242fb6, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'

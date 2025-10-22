@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Weapon : MonoBehaviour {
 
@@ -21,36 +22,95 @@ public class Weapon : MonoBehaviour {
     [SerializeField] GameObject hitEffect;
     [SerializeField] TextMeshProUGUI ammoText;
 
+    [SerializeField] AudioClip weaponShootSound;
+    [SerializeField] AudioClip emptyWeaponSound;
+    [SerializeField] AudioClip[] weaponEquipSound;
+
+    AudioSource audioSource;
+
     [HideInInspector] public bool canShoot = true;
+
+    Transform projectileBarrel;
 
     void Update() {
         DisplayAmmo();
 
-        if ((weaponPattern.weaponType == WeaponPatternSO.WeaponFiringType.RayBullet) && weaponPattern.isAutomatic && Input.GetMouseButtonDown(0) && canShoot == true) {
-            StartCoroutine(RaycastShoot());
-        }
-        else if ((weaponPattern.weaponType == WeaponPatternSO.WeaponFiringType.ProjectileBullet) && !weaponPattern.isAutomatic && Input.GetMouseButtonDown(0) && canShoot == true) {
-            StartCoroutine(ProjectileShoot());
+        //if ((weaponPattern.weaponType == WeaponPatternSO.WeaponFiringType.RayBullet) && weaponPattern.isAutomatic && Input.GetMouseButtonDown(0) && canShoot == true) {
+        //    StartCoroutine(RaycastShoot());
+        //}
+        //else if ((weaponPattern.weaponType == WeaponPatternSO.WeaponFiringType.ProjectileBullet) && !weaponPattern.isAutomatic && Input.GetMouseButtonDown(0) && canShoot == true) {
+        //    StartCoroutine(ProjectileShoot());
+        //}
+
+        switch (weaponPattern.weaponType) {
+            case WeaponPatternSO.WeaponFiringType.RayBullet:
+                if(!canShoot) {
+                    return;
+                }
+                else if (weaponPattern.isAutomatic && Input.GetMouseButton(0)){
+                    StartCoroutine(RaycastShoot());
+                } else if (!weaponPattern.isAutomatic && Input.GetMouseButtonDown(0)) {
+                    StartCoroutine(RaycastShoot());
+                }
+                break;
+
+             case WeaponPatternSO.WeaponFiringType.ProjectileBullet:
+                if (!canShoot) {
+                    return;
+                }
+                else if (weaponPattern.isAutomatic && Input.GetMouseButton(0)) {
+                    StartCoroutine(ProjectileShoot());
+                }
+                else if (!weaponPattern.isAutomatic && Input.GetMouseButtonDown(0)) {
+                    StartCoroutine(ProjectileShoot());
+                }
+                break;
+                
+                    case WeaponPatternSO.WeaponFiringType.ParticleBullet:
+                if (!canShoot) {
+                    return;
+                }
+                else if (weaponPattern.isAutomatic && Input.GetMouseButton(0)) {
+
+                }
+                else if (!weaponPattern.isAutomatic && Input.GetMouseButtonDown(0)) {
+
+                }
+                break;
         }
     }
 
     private void OnEnable() {
         canShoot = true;
+        audioSource = GetComponentInParent<AudioSource>();
+        if (weaponPattern.weaponType == WeaponPatternSO.WeaponFiringType.ProjectileBullet) {
+            foreach (Transform child in GetComponentsInChildren<Transform>()) {
+                if (child.CompareTag("ProjectileBarrel")) {
+                    projectileBarrel = child;
+                    break;
+                }
+            }
+        }
+
+        if (weaponEquipSound != null) {
+            audioSource.PlayOneShot(weaponEquipSound[Random.Range(0,weaponEquipSound.Length)]);
+        }
     }
 
     IEnumerator RaycastShoot() {
         canShoot = false;
         if (ammoSlot.GetCurrentAmmo(ammoType) > 0) {
-
             ProcessRaycast();
             for (int i = 0; i < weaponPattern.numberOfBursts; i++) {
-                PlayMuzzleFlash();
+                PlayWeaponEffects();
                 ammoSlot.ReduceAmmoAmount(ammoType);
                 yield return new WaitForSeconds(0.1f);
             }
+        } else if (emptyWeaponSound != null){
+            audioSource.PlayOneShot(emptyWeaponSound);
         }
 
-        yield return new WaitForSeconds(weaponPattern.timeBetweenShots);
+            yield return new WaitForSeconds(weaponPattern.timeBetweenShots);
         canShoot = true;
     }
 
@@ -82,17 +142,19 @@ public class Weapon : MonoBehaviour {
             }
         }
     }
-
     IEnumerator ProjectileShoot() {
         canShoot = false;
         if (ammoSlot.GetCurrentAmmo(ammoType) > 0) {
 
             ProjectileLaunch();
             for (int i = 0; i < weaponPattern.numberOfBursts; i++) {
-                PlayMuzzleFlash();
+                PlayWeaponEffects();
                 ammoSlot.ReduceAmmoAmount(ammoType);
                 yield return new WaitForSeconds(0.1f);
             }
+        }
+        else if (emptyWeaponSound != null) {
+            audioSource.PlayOneShot(emptyWeaponSound);
         }
 
         yield return new WaitForSeconds(weaponPattern.timeBetweenShots);
@@ -107,31 +169,32 @@ public class Weapon : MonoBehaviour {
             direction.y += Random.Range(-weaponPattern.sprayFactor, weaponPattern.sprayFactor);
 
             for (int i = 0; i < weaponPattern.numberOfProjectiles; i++) {
-                
-                GameObject projectile = Instantiate(weaponPattern.projectilePrefab, FPCamera.transform.position, FPCamera.transform.rotation);
+
+                GameObject projectile = Instantiate(weaponPattern.projectilePrefab, projectileBarrel.position, FPCamera.transform.rotation);
                 Rigidbody bulletRb = projectile.GetComponent<Rigidbody>();
-                bulletRb.AddForce(direction.normalized * (weaponPattern.range / 10) , ForceMode.Impulse);
+                bulletRb.AddForce(direction.normalized * (weaponPattern.range / 5), ForceMode.Impulse);
             }
         }
     }
 
-        void PlayMuzzleFlash() {
-            muzzleFlash.Play();
-        }
+    void PlayWeaponEffects() {
+        muzzleFlash.Play();
+        audioSource.PlayOneShot(weaponShootSound);
+    }
 
-        void CreateHitImpact(RaycastHit hit) {
-            GameObject impact = Instantiate(hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
-            var main = hitEffect.GetComponentInChildren<ParticleSystem>().main;
+    void CreateHitImpact(RaycastHit hit) {
+        GameObject impact = Instantiate(hitEffect, hit.point, Quaternion.LookRotation(hit.normal));
+        var main = hitEffect.GetComponentInChildren<ParticleSystem>().main;
 
-            float impactDurationTime = main.duration;
+        float impactDurationTime = main.duration;
 
-            Destroy(impact, impactDurationTime);
-        }
+        Destroy(impact, impactDurationTime);
+    }
 
-        void DisplayAmmo() {
-            int currentAmmo = ammoSlot.GetCurrentAmmo(ammoType);
-            ammoText.text = currentAmmo.ToString();
-        }
+    void DisplayAmmo() {
+        int currentAmmo = ammoSlot.GetCurrentAmmo(ammoType);
+        ammoText.text = currentAmmo.ToString();
+    }
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.blue;

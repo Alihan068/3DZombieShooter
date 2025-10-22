@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -28,6 +29,7 @@ public class EnemyController : MonoBehaviour {
         enemyHealth = GetComponent<EnemyHealth>();
         target = FindFirstObjectByType<PlayerHealth>().transform;
         audioSource = GetComponent<AudioSource>();
+        StartCoroutine(PlaySoundAfterDelay(10f, idleSounds));
     }
     // Update is called once per frame
     void Update() {
@@ -37,8 +39,14 @@ public class EnemyController : MonoBehaviour {
         }
         distanceToTarget = Vector3.Distance(transform.position, target.position);
 
-        if (isProvoked) {
-            audioSource.PlayOneShot(chaseSounds[Random.Range(0, chaseSounds.Length)]);
+        if (distanceToTarget >= chaseRange){          
+            outOfRangeTimer += Time.deltaTime;
+
+            if (outOfRangeTimer >= chaseTimeout) {
+                StopChase();
+            }
+        }
+        else if (isProvoked) {
             EngageTarget();
         }
         else if (distanceToTarget <= chaseRange) {
@@ -61,38 +69,28 @@ public class EnemyController : MonoBehaviour {
     }
 
     void ChaseTarget() {
-        StartCoroutine(ChaseEffects());
+        StartCoroutine(PlaySoundAfterDelay(10f, chaseSounds));
         navMeshAgent.isStopped = false;
         GetComponent<Animator>().SetBool("attack", false);
         GetComponent<Animator>().SetTrigger("move");
         navMeshAgent.SetDestination(target.position);
     }
     void StopChase() {
+        GetComponent<Animator>().SetTrigger("idle");
         isProvoked = false;
         navMeshAgent.ResetPath();
-        navMeshAgent.isStopped = true;
-        GetComponent<Animator>().SetTrigger("idle");
-
+        navMeshAgent.isStopped = true;    
         outOfRangeTimer = 0;
     }
-
-    IEnumerator IdleEffects() {
+    IEnumerator PlaySoundAfterDelay(float delay, AudioClip[] clip) {
         if (!soundPlayedOnce) {
             soundPlayedOnce = true;
-            audioSource.PlayOneShot(idleSounds[Random.Range(0, idleSounds.Length)]);       
+            yield return new WaitForSeconds(0.1f);
+            audioSource.PlayOneShot(clip[UnityEngine.Random.Range(0, clip.Length)]);     
+            yield return new WaitForSeconds(delay);
+            soundPlayedOnce = false;                 
         }
-        yield return new WaitForSeconds(5f);
-        soundPlayedOnce = false;
     }
-    IEnumerator ChaseEffects() {
-        if (!soundPlayedOnce) {
-            soundPlayedOnce = true;
-            audioSource.PlayOneShot(idleSounds[Random.Range(0, idleSounds.Length)]);
-        }
-        yield return new WaitForSeconds(5f);
-        soundPlayedOnce = false;
-    }
-
     void FaceTarget() {
         Vector3 direction = (target.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
