@@ -2383,6 +2383,10 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5053864399306941941, guid: 6cb63163261c5a84a8a7410cf0775135, type: 3}
+      propertyPath: playerLayer.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 5053864399306941941, guid: 6cb63163261c5a84a8a7410cf0775135, type: 3}
       propertyPath: idleSounds.Array.size
       value: 3
       objectReference: {fileID: 0}

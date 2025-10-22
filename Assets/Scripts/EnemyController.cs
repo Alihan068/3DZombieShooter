@@ -16,6 +16,7 @@ public class EnemyController : MonoBehaviour {
     [SerializeField] float viewRange = 10f;
     [SerializeField] float chaseTimeout = 10f;
     [SerializeField] float investigateTimeout = 5f;
+    [SerializeField] LayerMask playerLayer;
 
     [SerializeField] float turnSpeed = 5f;
     float outOfInvestigationTimer = 0f;
@@ -68,7 +69,7 @@ public class EnemyController : MonoBehaviour {
         //else if (distanceToTarget <= viewRange) {
         //    isProvoked = true;
         //}
-
+        Debug.Log(CanSeePlayer());
         switch (enemyState) {
             case EnemyState.Idle:
                 IdleBehaviour();
@@ -136,7 +137,7 @@ public class EnemyController : MonoBehaviour {
             float angleBetweenTarget = Vector3.Angle(Vector3.forward, directionToTarget);
 
             if (angleBetweenTarget < fovLimit / 2) {
-                if (!Physics.Linecast(transform.position + Vector3.up, target.position + Vector3.up)) {
+                if (!Physics.Linecast(transform.position + Vector3.up * 3f, target.position + Vector3.up * 3f, playerLayer)) {
                     return true;
                 }
             }
