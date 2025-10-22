@@ -15,7 +15,7 @@ MonoBehaviour:
   weaponType: 0
   range: 100
   damage: 15
-  sprayFactor: 0.05
+  sprayFactor: 0
   numberOfProjectiles: 1
   numberOfBursts: 1
   timeBetweenShots: 1

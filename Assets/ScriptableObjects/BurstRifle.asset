@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: BurstRifle
   m_EditorClassIdentifier: Assembly-CSharp::WeaponPatternSO
   weaponType: 0
-  range: 100
+  range: 200
   damage: 20
-  sprayFactor: 0.05
+  sprayFactor: 0.1
   numberOfProjectiles: 1
   numberOfBursts: 3
   timeBetweenShots: 0.1
   isAutomatic: 0
+  projectilePrefab: {fileID: 0}

@@ -44,17 +44,18 @@ public class Weapon : MonoBehaviour {
 
         switch (weaponPattern.weaponType) {
             case WeaponPatternSO.WeaponFiringType.RayBullet:
-                if(!canShoot) {
+                if (!canShoot) {
                     return;
                 }
-                else if (weaponPattern.isAutomatic && Input.GetMouseButton(0)){
+                else if (weaponPattern.isAutomatic && Input.GetMouseButton(0)) {
                     StartCoroutine(RaycastShoot());
-                } else if (!weaponPattern.isAutomatic && Input.GetMouseButtonDown(0)) {
+                }
+                else if (!weaponPattern.isAutomatic && Input.GetMouseButtonDown(0)) {
                     StartCoroutine(RaycastShoot());
                 }
                 break;
 
-             case WeaponPatternSO.WeaponFiringType.ProjectileBullet:
+            case WeaponPatternSO.WeaponFiringType.ProjectileBullet:
                 if (!canShoot) {
                     return;
                 }
@@ -65,8 +66,8 @@ public class Weapon : MonoBehaviour {
                     StartCoroutine(ProjectileShoot());
                 }
                 break;
-                
-                    case WeaponPatternSO.WeaponFiringType.ParticleBullet:
+
+            case WeaponPatternSO.WeaponFiringType.ParticleBullet:
                 if (!canShoot) {
                     return;
                 }
@@ -93,24 +94,26 @@ public class Weapon : MonoBehaviour {
         }
 
         if (weaponEquipSound != null) {
-            audioSource.PlayOneShot(weaponEquipSound[Random.Range(0,weaponEquipSound.Length)]);
+            audioSource.PlayOneShot(weaponEquipSound[Random.Range(0, weaponEquipSound.Length)]);
         }
     }
 
     IEnumerator RaycastShoot() {
         canShoot = false;
-        if (ammoSlot.GetCurrentAmmo(ammoType) > 0) {
-            ProcessRaycast();
-            for (int i = 0; i < weaponPattern.numberOfBursts; i++) {
+
+        for (int i = 0; i < weaponPattern.numberOfBursts; i++) {
+            if (ammoSlot.GetCurrentAmmo(ammoType) > 0) {
+                ProcessRaycast();
                 PlayWeaponEffects();
                 ammoSlot.ReduceAmmoAmount(ammoType);
                 yield return new WaitForSeconds(0.1f);
             }
-        } else if (emptyWeaponSound != null){
-            audioSource.PlayOneShot(emptyWeaponSound);
+            else if (emptyWeaponSound != null) {
+                audioSource.PlayOneShot(emptyWeaponSound);
+            }
         }
 
-            yield return new WaitForSeconds(weaponPattern.timeBetweenShots);
+        yield return new WaitForSeconds(weaponPattern.timeBetweenShots);
         canShoot = true;
     }
 

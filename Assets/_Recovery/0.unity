@@ -17425,7 +17425,7 @@ MonoBehaviour:
   - ammoType: 1
     ammoAmount: 48
   - ammoType: 2
-    ammoAmount: 10
+    ammoAmount: 120
   - ammoType: 3
     ammoAmount: 20
 --- !u!114 &1337078178 stripped

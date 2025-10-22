@@ -72,11 +72,11 @@ public class EnemyController : MonoBehaviour {
         StartCoroutine(PlaySoundAfterDelay(10f, chaseSounds));
         navMeshAgent.isStopped = false;
         GetComponent<Animator>().SetBool("attack", false);
-        GetComponent<Animator>().SetTrigger("move");
+        GetComponent<Animator>().SetBool("isMoving", true);
         navMeshAgent.SetDestination(target.position);
     }
     void StopChase() {
-        GetComponent<Animator>().SetTrigger("idle");
+        GetComponent<Animator>().SetBool("isMoving", false);
         isProvoked = false;
         navMeshAgent.ResetPath();
         navMeshAgent.isStopped = true;    
