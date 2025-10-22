@@ -1,8 +1,9 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour {
-    
+
     [SerializeField] float chaseRange = 10f;
     [SerializeField] float chaseTimeout = 2f;
 
@@ -10,9 +11,15 @@ public class EnemyController : MonoBehaviour {
     float outOfRangeTimer = 0f;
     bool isProvoked = false;
 
+    AudioSource audioSource;
+    [SerializeField] AudioClip[] chaseSounds;
+    [SerializeField] AudioClip[] idleSounds;
+
     Transform target;
     NavMeshAgent navMeshAgent;
     EnemyHealth enemyHealth;
+
+    bool soundPlayedOnce = false;
 
     float distanceToTarget = Mathf.Infinity;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -20,18 +27,21 @@ public class EnemyController : MonoBehaviour {
         navMeshAgent = GetComponent<NavMeshAgent>();
         enemyHealth = GetComponent<EnemyHealth>();
         target = FindFirstObjectByType<PlayerHealth>().transform;
+        audioSource = GetComponent<AudioSource>();
     }
     // Update is called once per frame
     void Update() {
         if (enemyHealth.IsDead()) {
             enabled = false;
-            navMeshAgent.enabled = false; 
+            navMeshAgent.enabled = false;
         }
         distanceToTarget = Vector3.Distance(transform.position, target.position);
 
         if (isProvoked) {
+            audioSource.PlayOneShot(chaseSounds[Random.Range(0, chaseSounds.Length)]);
             EngageTarget();
-        } else if (distanceToTarget <= chaseRange) {
+        }
+        else if (distanceToTarget <= chaseRange) {
             isProvoked = true;
         }
 
@@ -39,8 +49,7 @@ public class EnemyController : MonoBehaviour {
 
 
     void EngageTarget() {
-
-        FaceTarget();   
+        FaceTarget();
 
         if (distanceToTarget >= navMeshAgent.stoppingDistance) {
             ChaseTarget();
@@ -52,28 +61,46 @@ public class EnemyController : MonoBehaviour {
     }
 
     void ChaseTarget() {
+        StartCoroutine(ChaseEffects());
         navMeshAgent.isStopped = false;
         GetComponent<Animator>().SetBool("attack", false);
         GetComponent<Animator>().SetTrigger("move");
         navMeshAgent.SetDestination(target.position);
     }
-    void StopChase() {       
-            isProvoked = false;
-            navMeshAgent.ResetPath();
-            navMeshAgent.isStopped = true;
-            GetComponent<Animator>().SetTrigger("idle");
+    void StopChase() {
+        isProvoked = false;
+        navMeshAgent.ResetPath();
+        navMeshAgent.isStopped = true;
+        GetComponent<Animator>().SetTrigger("idle");
 
-            outOfRangeTimer = 0;      
+        outOfRangeTimer = 0;
+    }
+
+    IEnumerator IdleEffects() {
+        if (!soundPlayedOnce) {
+            soundPlayedOnce = true;
+            audioSource.PlayOneShot(idleSounds[Random.Range(0, idleSounds.Length)]);       
+        }
+        yield return new WaitForSeconds(5f);
+        soundPlayedOnce = false;
+    }
+    IEnumerator ChaseEffects() {
+        if (!soundPlayedOnce) {
+            soundPlayedOnce = true;
+            audioSource.PlayOneShot(idleSounds[Random.Range(0, idleSounds.Length)]);
+        }
+        yield return new WaitForSeconds(5f);
+        soundPlayedOnce = false;
     }
 
     void FaceTarget() {
         Vector3 direction = (target.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x,0 , direction.z));
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
     }
 
-    public void OnDamageTaken() { 
-    isProvoked = true;
+    public void OnDamageTaken() {
+        isProvoked = true;
     }
     void AttackTarget() {
         GetComponent<Animator>().SetBool("attack", true);
@@ -87,21 +114,21 @@ public class EnemyController : MonoBehaviour {
     }
 
     //private void OldUpdateVersion() {
-        //    if (distanceToTarget > chaseRange){
+    //    if (distanceToTarget > chaseRange){
 
-        //        outOfRangeTimer += Time.deltaTime;
+    //        outOfRangeTimer += Time.deltaTime;
 
-        //        if (outOfRangeTimer >= chaseTimeout) {
-        //            StopChase();
+    //        if (outOfRangeTimer >= chaseTimeout) {
+    //            StopChase();
 
-        //        }
-        //    }
-        //    else if (isProvoked) {
-        //        EngageTarget();
-        //    }
-        //    else if (distanceToTarget <= chaseRange) {
-        //        isProvoked = true;
-        //    }
-        //}
+    //        }
+    //    }
+    //    else if (isProvoked) {
+    //        EngageTarget();
+    //    }
+    //    else if (distanceToTarget <= chaseRange) {
+    //        isProvoked = true;
+    //    }
+    //}
     //}
 }
