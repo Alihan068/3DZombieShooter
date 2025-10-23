@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 3300000}
   - component: {fileID: 2300000}
   - component: {fileID: 3004362896628764644}
-  - component: {fileID: -211437374439523082}
+  - component: {fileID: 2517678908817673819}
+  - component: {fileID: 7101594689200364580}
   m_Layer: 0
   m_Name: Props_Bus Stop
   m_TagString: Untagged
@@ -112,7 +113,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 6, y: 4.975605, z: 0.3}
   m_Center: {x: 0.00000011920929, y: 2.487536, z: -0.03}
---- !u!64 &-211437374439523082
+--- !u!64 &2517678908817673819
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -134,3 +135,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 9e6e51a480e2d6f43878a5d789bd8704, type: 3}
+--- !u!208 &7101594689200364580
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.0000002, y: 2.4880002, z: 0.15}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 2.4880002, z: 0}
+  m_TimeToStationary: 0.5
