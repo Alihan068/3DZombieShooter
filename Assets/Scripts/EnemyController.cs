@@ -13,6 +13,16 @@ public enum EnemyState {
 
 public class EnemyController : MonoBehaviour {
 
+    [SerializeField] float lookAtWeight = 1f;
+    [SerializeField] float headLookWeight = 1f;
+    [SerializeField] float bodyLookWeight = 0.2f;
+
+    [SerializeField] float jumpAttackDistance = 3f;
+    [SerializeField] float heightDifferenceThreshold = 1.5f;
+
+    [SerializeField] float destinationUpdateInterval = 0.5f;
+    float destinationUpdateTimer = 0f;
+
     [SerializeField] float viewRange = 10f;
     [SerializeField] float chaseTimeout = 10f;
     [SerializeField] float investigateTimeout = 5f;
@@ -69,7 +79,7 @@ public class EnemyController : MonoBehaviour {
         //else if (distanceToTarget <= viewRange) {
         //    isProvoked = true;
         //}
-        Debug.Log(CanSeePlayer());
+        //Debug.Log(CanSeePlayer());
         switch (enemyState) {
             case EnemyState.Idle:
                 IdleBehaviour();
@@ -101,10 +111,26 @@ public class EnemyController : MonoBehaviour {
                 break;
 
             case EnemyState.Chasing:
-
                 ChaseTarget();
+                
+                destinationUpdateTimer += Time.deltaTime;
+                if (destinationUpdateTimer >= destinationUpdateInterval)
+                {
+                    destinationUpdateTimer = 0f;
+                    Vector3 closestPoint = GetClosestReachablePoint(target.position);
+                    navMeshAgent.SetDestination(closestPoint);
+                }
 
-                if (distanceToTarget <= navMeshAgent.stoppingDistance) {
+                // Check if player is unreachable above
+                if (IsPlayerUnreachableAbove()) {
+                    //GetComponent<Animator>().SetBool("jumpAttack", true);
+                    //GetComponent<Animator>().SetBool("isMoving", false);
+                    navMeshAgent.isStopped = true;
+
+                    // Still face the player
+                    FaceTarget();
+                }
+                else if (distanceToTarget <= navMeshAgent.stoppingDistance) {
                     enemyState = EnemyState.Attacking;
                 }
                 else if (outOfRangeTimer >= chaseTimeout) {
@@ -114,7 +140,11 @@ public class EnemyController : MonoBehaviour {
                 else if (distanceToTarget >= viewRange) {
                     outOfRangeTimer += Time.deltaTime;
                 }
-                
+                else
+                {
+                    // Reset jump animation when player becomes reachable
+                    //GetComponent<Animator>().SetBool("jumpAttack", false);
+                }
 
                 break;
 
@@ -171,7 +201,21 @@ public class EnemyController : MonoBehaviour {
         navMeshAgent.isStopped = false;
         GetComponent<Animator>().SetBool("attack", false);
         GetComponent<Animator>().SetBool("isMoving", true);
-        navMeshAgent.SetDestination(target.position);
+
+        Vector3 targetPosition = GetClosestReachablePoint(target.position);
+        navMeshAgent.SetDestination(targetPosition);
+    }
+
+    Vector3 GetClosestReachablePoint(Vector3 targetPos) {
+        NavMeshHit hit;
+
+        if (NavMesh.SamplePosition(targetPos, out hit, 10f, NavMesh.AllAreas))
+        {
+            return hit.position;
+        }
+
+        // if for some reason can't find point near target, return current destination
+        return targetPos;
     }
 
     void StopChase() {
@@ -191,10 +235,46 @@ public class EnemyController : MonoBehaviour {
             soundPlayedOnce = false;
         }
     }
-    void FaceTarget() {
+
+
+    void FaceTarget()
+    {
         Vector3 direction = (target.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
+        Quaternion bodyRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, bodyRotation, Time.deltaTime * turnSpeed);
+    }
+
+    private void OnAnimatorIK(int layerIndex)
+    {
+        if (target != null)
+        {
+            Animator animator = GetComponent<Animator>();
+
+            animator.SetLookAtWeight(lookAtWeight, bodyLookWeight, headLookWeight);
+            animator.SetLookAtPosition(target.position);
+        }
+    }
+
+    bool IsPlayerUnreachableAbove()
+    {
+        // Check if player is close horizontally
+        float horizontalDistance = Vector3.Distance(
+            new Vector3(transform.position.x, 0, transform.position.z),
+            new Vector3(target.position.x, 0, target.position.z)
+        );
+
+        // Check if player is higher
+        float heightDifference = target.position.y - transform.position.y;
+        Debug.Log("Height Difference: " + heightDifference);
+
+
+        // Check if we've reached our NavMesh destination (which means we can't get any closer)
+        bool reachedDestination = !navMeshAgent.pathPending &&
+                                  navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance;
+
+        return horizontalDistance <= jumpAttackDistance &&
+               heightDifference >= heightDifferenceThreshold &&
+               reachedDestination;
     }
 
     public void OnDamageTaken() {
