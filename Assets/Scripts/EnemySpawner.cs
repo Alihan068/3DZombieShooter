@@ -29,11 +29,15 @@ public class EnemySpawner : MonoBehaviour
     }
 
     IEnumerator SpawnEnemyAtRandomPos(int spawnAmount) {
+
         for (int i = 0; i < spawnAmount; i++) {
             Vector3 pos = target.position;
 
-            Vector3 randomPos = new Vector3(pos.x + Random.Range(minSpawnDistance, maxSpawnDistance),
-                1, pos.z + Random.Range(minSpawnDistance, maxSpawnDistance));
+            Vector2 randomDriection = Random.insideUnitCircle.normalized;
+            float randomDistance = Random.Range(minSpawnDistance, maxSpawnDistance);
+
+            Vector3 randomPos = new Vector3(pos.x + randomDriection.x * randomDistance,
+                1, pos.z + randomDriection.y * randomDistance);
 
             Instantiate(EnemyPrefabs[Random.Range(0,EnemyPrefabs.Length)], randomPos, Quaternion.identity);
             Debug.Log(randomPos);

@@ -59,13 +59,13 @@ public class EnemyController : MonoBehaviour {
 
     float distanceToTarget = Mathf.Infinity;
 
-    void Start() {
+    void OnEnable() {
         navMeshAgent = GetComponent<NavMeshAgent>();
         enemyHealth = GetComponent<EnemyHealth>();
         target = FindFirstObjectByType<PlayerHealth>().transform;
         audioSource = GetComponent<AudioSource>();
         StartCoroutine(PlaySoundAfterDelay(10f, idleSounds));
-        enemyState = EnemyState.Idle;
+        enemyState = EnemyState.Chasing;
     }
 
     void Update() {

@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4032642234185772114}
   - component: {fileID: 7154422156211496878}
   - component: {fileID: 1966381432393929145}
-  - component: {fileID: 4453469799784915439}
   m_Layer: 0
   m_Name: Ammo shotgun (15)
   m_TagString: Untagged
@@ -90,28 +89,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4453469799784915439
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 273682453744629233}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: bce8d2a4cb5a61143a36bf76180a70d8, type: 3}
 --- !u!1 &376329865772416426
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,7 +100,6 @@ GameObject:
   - component: {fileID: 2427868623959480669}
   - component: {fileID: 3378194543987850001}
   - component: {fileID: 4413474940132280280}
-  - component: {fileID: 3421932752403694904}
   m_Layer: 0
   m_Name: Ammo shotgun (13)
   m_TagString: Untagged
@@ -202,28 +178,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3421932752403694904
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 376329865772416426}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: bce8d2a4cb5a61143a36bf76180a70d8, type: 3}
 --- !u!1 &806420769856814931
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,7 +189,6 @@ GameObject:
   - component: {fileID: 2330963216501611076}
   - component: {fileID: 356870170999753005}
   - component: {fileID: 8366167048617781991}
-  - component: {fileID: 4811319453313843737}
   m_Layer: 0
   m_Name: Ammo shotgun (14)
   m_TagString: Untagged
@@ -314,28 +267,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4811319453313843737
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 806420769856814931}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: bce8d2a4cb5a61143a36bf76180a70d8, type: 3}
 --- !u!1 &2108026755536116221
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,7 +278,6 @@ GameObject:
   - component: {fileID: 4224213093095476889}
   - component: {fileID: 8173502692743991941}
   - component: {fileID: 1887446527760542980}
-  - component: {fileID: 7652328437594181522}
   m_Layer: 0
   m_Name: Ammo shotgun (12)
   m_TagString: Untagged
@@ -426,28 +356,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7652328437594181522
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2108026755536116221}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: bce8d2a4cb5a61143a36bf76180a70d8, type: 3}
 --- !u!1 &2753823528384248319
 GameObject:
   m_ObjectHideFlags: 0
@@ -459,7 +367,6 @@ GameObject:
   - component: {fileID: 7027442436456640037}
   - component: {fileID: 2482145395588965606}
   - component: {fileID: 5353365316938553294}
-  - component: {fileID: 4978326495434361154}
   m_Layer: 0
   m_Name: Ammo shotgun (10)
   m_TagString: Untagged
@@ -538,28 +445,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4978326495434361154
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2753823528384248319}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: bce8d2a4cb5a61143a36bf76180a70d8, type: 3}
 --- !u!1 &3344646062935278578
 GameObject:
   m_ObjectHideFlags: 0
@@ -571,7 +456,6 @@ GameObject:
   - component: {fileID: 8218220874546063520}
   - component: {fileID: 1412503239455902884}
   - component: {fileID: 8259648223546563856}
-  - component: {fileID: 8949788718000051429}
   m_Layer: 0
   m_Name: Ammo shotgun (16)
   m_TagString: Untagged
@@ -650,28 +534,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8949788718000051429
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3344646062935278578}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: bce8d2a4cb5a61143a36bf76180a70d8, type: 3}
 --- !u!1 &3760703624110746318
 GameObject:
   m_ObjectHideFlags: 0
@@ -683,7 +545,6 @@ GameObject:
   - component: {fileID: 4036923328552744377}
   - component: {fileID: 5115710785967883920}
   - component: {fileID: 255942738480289061}
-  - component: {fileID: 4217334899674779385}
   m_Layer: 0
   m_Name: Ammo shotgun (17)
   m_TagString: Untagged
@@ -762,28 +623,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4217334899674779385
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3760703624110746318}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: bce8d2a4cb5a61143a36bf76180a70d8, type: 3}
 --- !u!1 &4669194618097466347
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,6 +635,9 @@ GameObject:
   - component: {fileID: 8304636934921179365}
   - component: {fileID: 4619370790420882461}
   - component: {fileID: 2085575965779015916}
+  - component: {fileID: 77627972618494977}
+  - component: {fileID: 1914908991145084725}
+  - component: {fileID: 7906844687031881667}
   m_Layer: 0
   m_Name: AmmoBlue
   m_TagString: Untagged
@@ -898,6 +740,75 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AmmoPickup
   ammoType: 0
   ammoAmount: 10
+--- !u!65 &77627972618494977
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4669194618097466347}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5, y: 0.5, z: 0.5}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &1914908991145084725
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4669194618097466347}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &7906844687031881667
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4669194618097466347}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.16183099, y: 0.13357127, z: 0.08134961}
+  m_Center: {x: 0.00015671551, y: 0.06678563, z: 0.01835655}
 --- !u!1 &4816636320729856814
 GameObject:
   m_ObjectHideFlags: 0
@@ -909,7 +820,6 @@ GameObject:
   - component: {fileID: 5355711522421599911}
   - component: {fileID: 9094370376795731151}
   - component: {fileID: 2614300376653302958}
-  - component: {fileID: 3890099632036228029}
   m_Layer: 0
   m_Name: Ammo shotgun (19)
   m_TagString: Untagged
@@ -988,28 +898,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &3890099632036228029
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4816636320729856814}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: bce8d2a4cb5a61143a36bf76180a70d8, type: 3}
 --- !u!1 &6397675106708365789
 GameObject:
   m_ObjectHideFlags: 0
@@ -1021,7 +909,6 @@ GameObject:
   - component: {fileID: 8565958740490531060}
   - component: {fileID: 2239097576049655191}
   - component: {fileID: 2361480370276478366}
-  - component: {fileID: 2270660717220666246}
   m_Layer: 0
   m_Name: Ammo shotgun (18)
   m_TagString: Untagged
@@ -1100,28 +987,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2270660717220666246
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6397675106708365789}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: bce8d2a4cb5a61143a36bf76180a70d8, type: 3}
 --- !u!1 &6727139756938010421
 GameObject:
   m_ObjectHideFlags: 0
@@ -1133,7 +998,6 @@ GameObject:
   - component: {fileID: 9176389288691686912}
   - component: {fileID: 53898006758299622}
   - component: {fileID: 3254804413132730917}
-  - component: {fileID: 89507332853500055}
   m_Layer: 0
   m_Name: Ammo shotgun (11)
   m_TagString: Untagged
@@ -1212,25 +1076,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &89507332853500055
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6727139756938010421}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: bce8d2a4cb5a61143a36bf76180a70d8, type: 3}
