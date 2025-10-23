@@ -22,20 +22,20 @@ public class Grenade : MonoBehaviour {
     void OnEnable() {
         audioSource = GetComponent<AudioSource>();
         StartCoroutine(DetonateAfterDelay());
-        Debug.Log("Summoned Grenade");
+        //Debug.Log("Summoned Grenade");
     }
     public void DetonateNow() {
         StartCoroutine(Explode());
     }
 
     IEnumerator DetonateAfterDelay() {
-        Debug.Log("FuseTime Activated : " + fuseTime);
+        //Debug.Log("FuseTime Activated : " + fuseTime);
         yield return new WaitForSeconds(fuseTime);
         yield return StartCoroutine(Explode());
     }
 
     IEnumerator Explode() {
-        Debug.Log("Fusetime Finished, Explode!");
+        //Debug.Log("Fusetime Finished, Explode!");
         Vector3 currentPos = transform.position;
 
         if (explosionEffectPrefab != null) {
@@ -53,7 +53,7 @@ public class Grenade : MonoBehaviour {
         // Physics and damage
         Collider[] hits = Physics.OverlapSphere(currentPos, radius, affectedLayers, QueryTriggerInteraction.Ignore);
         foreach (var col in hits) {
-            Debug.Log("Hit! : "+ col);
+            //Debug.Log("Hit! : "+ col);
             // Apply explosion force to rigidbodies
             Rigidbody rb = col.attachedRigidbody;
             if (rb != null) {

@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyAttack : MonoBehaviour {
 
     [SerializeField] float damage = 25f;
-    [SerializeField] PlayerHealth target;
+    PlayerHealth target;
     [SerializeField] AudioClip[] attackClips;
     AudioSource audioManager;
     

@@ -13,9 +13,21 @@ public enum EnemyState {
 
 public class EnemyController : MonoBehaviour {
 
+    [Header("Navigation Settings")]
+
     [SerializeField] float viewRange = 10f;
     [SerializeField] float chaseTimeout = 10f;
     [SerializeField] float investigateTimeout = 5f;
+
+    [SerializeField] float jumpAttackDistance = 3f;
+    [SerializeField] float heightDifferenceTreshHold = 1.5f;
+
+    [SerializeField] float destinationUpdateInterval = 0.5f;
+
+    [SerializeField] float hearingDistance = 10f;
+    [SerializeField] float InvestigationTime = 5f;
+    [SerializeField] float fovLimit = 90f;
+
     [SerializeField] LayerMask playerLayer;
 
     [SerializeField] float turnSpeed = 5f;
@@ -23,6 +35,16 @@ public class EnemyController : MonoBehaviour {
     float outOfRangeTimer = 0f;
     bool isProvoked = false;
 
+    [Header("Animation Settings")]
+    [SerializeField] Transform zombieHead;
+    [SerializeField] float lookAtWeight = 1f;
+    [SerializeField] float headLookWeight = 1f;
+    [SerializeField] float bodyLookWeight = 0.3f;
+
+   
+    float destinationUpdateTimer = 0f;
+
+    [Header("Audio Settings")]
     AudioSource audioSource;
     [SerializeField] AudioClip[] chaseSounds;
     [SerializeField] AudioClip[] idleSounds;
@@ -37,9 +59,6 @@ public class EnemyController : MonoBehaviour {
 
     float distanceToTarget = Mathf.Infinity;
 
-    [SerializeField] float hearingDistance = 10f;
-    [SerializeField] float InvestigationTime = 5f;
-    [SerializeField] float fovLimit = 90f;
     void Start() {
         navMeshAgent = GetComponent<NavMeshAgent>();
         enemyHealth = GetComponent<EnemyHealth>();
@@ -69,14 +88,14 @@ public class EnemyController : MonoBehaviour {
         //else if (distanceToTarget <= viewRange) {
         //    isProvoked = true;
         //}
-        Debug.Log(CanSeePlayer());
+        //Debug.Log(CanSeePlayer());
         switch (enemyState) {
             case EnemyState.Idle:
                 IdleBehaviour();
                 if (isProvoked || distanceToTarget <= hearingDistance) {
                     Debug.Log("From Idle to Ivnest");
                     enemyState = EnemyState.Investigating;
-                    
+
                 }
                 break;
 
@@ -88,23 +107,34 @@ public class EnemyController : MonoBehaviour {
                 if (CanSeePlayer()) {
                     Debug.Log("From Invest to Chase");
                     enemyState = EnemyState.Chasing;
-                    
+
                 }
 
                 else if (outOfInvestigationTimer >= investigateTimeout) {
                     Debug.Log("From Chase To Invest");
                     enemyState = EnemyState.Idle;
-                    
+
                 }
 
-                
+
                 break;
 
             case EnemyState.Chasing:
 
                 ChaseTarget();
 
-                if (distanceToTarget <= navMeshAgent.stoppingDistance) {
+                destinationUpdateTimer += Time.deltaTime;
+                if (destinationUpdateTimer >= destinationUpdateInterval) {
+                    destinationUpdateTimer = 0f;
+                    Vector3 closestPoint = GetClosestReachablePoint(target.position);
+                    navMeshAgent.SetDestination(closestPoint);
+                }
+                if (IsPlayerUnreachableAbove()) {
+                    navMeshAgent.isStopped = true;
+                    FaceTarget();
+                }
+
+                else if (distanceToTarget <= navMeshAgent.stoppingDistance) {
                     enemyState = EnemyState.Attacking;
                 }
                 else if (outOfRangeTimer >= chaseTimeout) {
@@ -114,7 +144,7 @@ public class EnemyController : MonoBehaviour {
                 else if (distanceToTarget >= viewRange) {
                     outOfRangeTimer += Time.deltaTime;
                 }
-                
+
 
                 break;
 
@@ -133,11 +163,11 @@ public class EnemyController : MonoBehaviour {
 
         if (distanceToTarget <= viewRange) {
 
-            Vector3 directionToTarget = (target.position - transform.position).normalized;
-            float angleBetweenTarget = Vector3.Angle(Vector3.forward, directionToTarget);
+            Vector3 directionToTarget = (target.position - zombieHead.position).normalized;
+            float angleBetweenTarget = Vector3.Angle(zombieHead.forward, directionToTarget);
 
             if (angleBetweenTarget < fovLimit / 2) {
-                if (!Physics.Linecast(transform.position + Vector3.up * 3f, target.position + Vector3.up * 3f, playerLayer)) {
+                if (!Physics.Linecast(zombieHead.position, target.position + Vector3.up * 3f, playerLayer)) {
                     return true;
                 }
             }
@@ -157,6 +187,7 @@ public class EnemyController : MonoBehaviour {
         }
     }
 
+ 
     void IdleBehaviour() {
         Debug.Log("Idle");
         StartCoroutine(PlaySoundAfterDelay(10f, idleSounds));
@@ -171,9 +202,20 @@ public class EnemyController : MonoBehaviour {
         navMeshAgent.isStopped = false;
         GetComponent<Animator>().SetBool("attack", false);
         GetComponent<Animator>().SetBool("isMoving", true);
-        navMeshAgent.SetDestination(target.position);
+
+        Vector3 targetPosition = GetClosestReachablePoint(target.position);
+        navMeshAgent.SetDestination(targetPosition);
     }
 
+    Vector3 GetClosestReachablePoint(Vector3 targetPos) {
+        NavMeshHit hit;
+
+        if (NavMesh.SamplePosition(targetPos, out hit, 10f, NavMesh.AllAreas)) {
+            return hit.position;
+        }
+
+        return targetPos;
+    }
     void StopChase() {
         Debug.Log("StopChase");
         GetComponent<Animator>().SetBool("isMoving", false);
@@ -191,14 +233,41 @@ public class EnemyController : MonoBehaviour {
             soundPlayedOnce = false;
         }
     }
+    bool IsPlayerUnreachableAbove() {
+
+        //Player horizontal distance check
+        float horizontalDistance = Vector3.Distance(
+            new Vector3(transform.position.x, 0, transform.position.z),
+            new Vector3(target.position.x, 0, target.position.z));
+
+        //Player vertical height diff check
+        float heightDifference = target.position.y - transform.position.y;
+
+        //CHeck if reacher destination
+        bool reachedDestination = !navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance;
+
+        return horizontalDistance <= jumpAttackDistance &&
+            heightDifference >= heightDifferenceTreshHold &&
+            reachedDestination;
+    }
     void FaceTarget() {
         Vector3 direction = (target.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
+        Quaternion bodyRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, bodyRotation, Time.deltaTime * turnSpeed);
+    }
+
+    private void OnAnimatorIK(int layerIndex) {
+        if (target != null) {
+            Animator animator = GetComponent<Animator>();
+
+            animator.SetLookAtWeight(lookAtWeight, bodyLookWeight, headLookWeight);
+            animator.SetLookAtPosition(target.position);
+        }
     }
 
     public void OnDamageTaken() {
         isProvoked = true;
+        enemyState = EnemyState.Chasing;
     }
     void AttackTarget() {
         GetComponent<Animator>().SetBool("attack", true);
