@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public enum EnemyState {
     Idle,
-    Chasing,
+    PursuePlayer,
     Attacking,
     Investigating
 }
@@ -16,7 +16,7 @@ public class EnemyController : MonoBehaviour {
     [Header("Navigation Settings")]
 
     [SerializeField] float viewRange = 10f;
-    [SerializeField] float chaseTimeout = 10f;
+    [SerializeField] float pursueTimeOut = 10f;
     [SerializeField] float investigateTimeout = 5f;
 
     [SerializeField] float jumpAttackDistance = 3f;
@@ -86,7 +86,7 @@ public class EnemyController : MonoBehaviour {
             case EnemyState.Idle:
                 IdleBehaviour();
                 if (isAlerted) {
-                    enemyState = EnemyState.Chasing;
+                    enemyState = EnemyState.PursuePlayer;
                 }
                 if (isProvoked || distanceToTarget <= hearingDistance) {
                     Debug.Log("From Idle to Ivnest");
@@ -96,17 +96,36 @@ public class EnemyController : MonoBehaviour {
                 break;
 
             case EnemyState.Investigating:
-                FaceTarget();
                 Debug.Log("Investigate");
-                outOfInvestigationTimer += Time.deltaTime;
+                ChaseTarget(target);
 
-                    Debug.Log("From Invest to Chase");
-                    enemyState = EnemyState.Chasing;
+                destinationUpdateTimer += Time.deltaTime;
+                if (destinationUpdateTimer >= destinationUpdateInterval) {
+                    destinationUpdateTimer = 0f;
+                    Vector3 closestPoint = GetClosestReachablePoint(target.position);
+                    navMeshAgent.SetDestination(closestPoint);
+                }
+                if (IsTargetUnreachableAbove()) {
+                    navMeshAgent.isStopped = true;
+                    FaceTarget();
+                }
+
+                //else if (distanceToTarget <= navMeshAgent.stoppingDistance && isAlerted) {
+                //    enemyState = EnemyState.Attacking;
+                //}
+                //else if (outOfRangeTimer >= chaseTimeout) {
+                //    StopChase();
+                //    enemyState = EnemyState.Investigating;
+                //}
+                //else if (distanceToTarget >= viewRange) {
+                //    outOfRangeTimer += Time.deltaTime;
+                //}
+
                 break;
 
-            case EnemyState.Chasing:
-
-                ChaseTarget();
+            case EnemyState.PursuePlayer:
+                Debug.Log("Pursue!");
+                ChaseTarget(playerTarget);
 
                 destinationUpdateTimer += Time.deltaTime;
                 if (destinationUpdateTimer >= destinationUpdateInterval) {
@@ -122,14 +141,13 @@ public class EnemyController : MonoBehaviour {
                 else if (distanceToTarget <= navMeshAgent.stoppingDistance && isAlerted) {
                     enemyState = EnemyState.Attacking;
                 }
-                else if (outOfRangeTimer >= chaseTimeout) {
-                    StopChase();
+                else if (outOfRangeTimer >= pursueTimeOut) {
+                    StopPursue();
                     enemyState = EnemyState.Investigating;
                 }
                 else if (distanceToTarget >= viewRange) {
                     outOfRangeTimer += Time.deltaTime;
                 }
-
 
                 break;
 
@@ -138,7 +156,7 @@ public class EnemyController : MonoBehaviour {
                 FaceTarget();
                 AttackTarget();
                 if (distanceToTarget >= navMeshAgent.stoppingDistance) {
-                    enemyState = EnemyState.Chasing;
+                    enemyState = EnemyState.PursuePlayer;
                 }
                 break;
         }
@@ -146,9 +164,10 @@ public class EnemyController : MonoBehaviour {
     }
 
     public void GotProvoked(Transform provoker) {
+        Vector3 provokerLastPos = provoker.position;
+        target.position = new Vector3(provokerLastPos.x, provokerLastPos.y, provokerLastPos.z);
         Debug.Log("Provoked by:" + provoker.name);
         isProvoked = true;
-        target = provoker;
         if (isAlerted) {
             navMeshAgent.ResetPath();
         }
@@ -173,19 +192,6 @@ public class EnemyController : MonoBehaviour {
         }
     }
 
-    void EngageTarget() {
-        FaceTarget();
-
-        if (distanceToTarget >= navMeshAgent.stoppingDistance) {
-            ChaseTarget();
-        }
-
-        if (distanceToTarget <= navMeshAgent.stoppingDistance) {
-            AttackTarget();
-        }
-    }
-
-
     void IdleBehaviour() {
         Debug.Log("Idle");
         StartCoroutine(PlaySoundAfterDelay(10f, idleSounds));
@@ -193,7 +199,7 @@ public class EnemyController : MonoBehaviour {
         outOfRangeTimer = 0;
 
     }
-    void ChaseTarget() {
+    void ChaseTarget(Transform target) {
         Debug.Log("Chase!");
         outOfInvestigationTimer = 0;
         StartCoroutine(PlaySoundAfterDelay(10f, chaseSounds));
@@ -214,8 +220,8 @@ public class EnemyController : MonoBehaviour {
 
         return targetPos;
     }
-    void StopChase() {
-        Debug.Log("StopChase");
+    void StopPursue() {
+        Debug.Log("StopPursue");
         GetComponent<Animator>().SetBool("isMoving", false);
         isProvoked = false;
         isAlerted = false;
@@ -267,7 +273,7 @@ public class EnemyController : MonoBehaviour {
     public void OnDamageTaken() {
         isProvoked = true;
         target = playerTarget;
-        enemyState = EnemyState.Chasing;
+        enemyState = EnemyState.PursuePlayer;
     }
     void AttackTarget() {
         GetComponent<Animator>().SetBool("attack", true);

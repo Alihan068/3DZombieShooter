@@ -17,7 +17,7 @@ public class ZombieHead : MonoBehaviour
 
     private void Update() {
         Debug.Log("Remote check enemy State = " + enemyState);
-        if (enemyState == EnemyState.Chasing) {
+        if (enemyState == EnemyState.PursuePlayer) {
             LookAtTargetVertically();
         }
     }
