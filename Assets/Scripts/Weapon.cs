@@ -26,6 +26,8 @@ public class Weapon : MonoBehaviour {
     [SerializeField] AudioClip emptyWeaponSound;
     [SerializeField] AudioClip[] weaponEquipSound;
 
+    Provoker provoker;
+
     AudioSource audioSource;
 
     [HideInInspector] public bool canShoot = true;
@@ -83,6 +85,7 @@ public class Weapon : MonoBehaviour {
 
     private void OnEnable() {
         canShoot = true;
+        provoker = FindFirstObjectByType<Provoker>();
         audioSource = GetComponentInParent<AudioSource>();
         if (weaponPattern.weaponType == WeaponPatternSO.WeaponFiringType.ProjectileBullet) {
             foreach (Transform child in GetComponentsInChildren<Transform>()) {
@@ -181,6 +184,7 @@ public class Weapon : MonoBehaviour {
     }
 
     void PlayWeaponEffects() {
+        provoker.ProvokeEnemies(transform, weaponPattern.provokeStrenght, weaponPattern.affectedLayers);
         muzzleFlash.Play();
         audioSource.PlayOneShot(weaponShootSound);
     }

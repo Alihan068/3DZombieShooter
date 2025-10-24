@@ -41,7 +41,7 @@ public class EnemyController : MonoBehaviour {
     [SerializeField] float headLookWeight = 1f;
     [SerializeField] float bodyLookWeight = 0.3f;
 
-   
+
     float destinationUpdateTimer = 0f;
 
     [Header("Audio Settings")]
@@ -49,8 +49,8 @@ public class EnemyController : MonoBehaviour {
     [SerializeField] AudioClip[] chaseSounds;
     [SerializeField] AudioClip[] idleSounds;
 
-
-    Transform targetPlayer;
+    Transform playerTarget;
+    public Transform target;
 
     NavMeshAgent navMeshAgent;
     EnemyHealth enemyHealth;
@@ -58,16 +58,17 @@ public class EnemyController : MonoBehaviour {
     EnemyState enemyState;
 
     bool soundPlayedOnce = false;
+    bool isAlerted = false;
 
     float distanceToTarget = Mathf.Infinity;
 
     void OnEnable() {
         navMeshAgent = GetComponent<NavMeshAgent>();
         enemyHealth = GetComponent<EnemyHealth>();
-        targetPlayer = FindFirstObjectByType<PlayerHealth>().transform;
+        playerTarget = FindFirstObjectByType<PlayerHealth>().transform;
         audioSource = GetComponent<AudioSource>();
         StartCoroutine(PlaySoundAfterDelay(10f, idleSounds));
-        enemyState = EnemyState.Chasing;
+        enemyState = EnemyState.Idle;
     }
 
     void Update() {
@@ -75,25 +76,18 @@ public class EnemyController : MonoBehaviour {
             enabled = false;
             navMeshAgent.enabled = false;
         }
-        distanceToTarget = Vector3.Distance(transform.position, targetPlayer.position);
+        CanSeePlayer();
+        if (target != null) {
+            distanceToTarget = Vector3.Distance(transform.position, target.position);
+        }
+        else { target = null; }
 
-        //if (distanceToTarget >= viewRange) {
-        //    outOfRangeTimer += Time.deltaTime;
-
-        //    if (outOfRangeTimer >= chaseTimeout) {
-        //        StopChase();
-        //    }
-        //}
-        //else if (isProvoked) {
-        //    EngageTarget();
-        //}
-        //else if (distanceToTarget <= viewRange) {
-        //    isProvoked = true;
-        //}
-        //Debug.Log(CanSeePlayer());
         switch (enemyState) {
             case EnemyState.Idle:
                 IdleBehaviour();
+                if (isAlerted) {
+                    enemyState = EnemyState.Chasing;
+                }
                 if (isProvoked || distanceToTarget <= hearingDistance) {
                     Debug.Log("From Idle to Ivnest");
                     enemyState = EnemyState.Investigating;
@@ -106,19 +100,8 @@ public class EnemyController : MonoBehaviour {
                 Debug.Log("Investigate");
                 outOfInvestigationTimer += Time.deltaTime;
 
-                if (CanSeePlayer()) {
                     Debug.Log("From Invest to Chase");
                     enemyState = EnemyState.Chasing;
-
-                }
-
-                else if (outOfInvestigationTimer >= investigateTimeout) {
-                    Debug.Log("From Chase To Invest");
-                    enemyState = EnemyState.Idle;
-
-                }
-
-
                 break;
 
             case EnemyState.Chasing:
@@ -128,15 +111,15 @@ public class EnemyController : MonoBehaviour {
                 destinationUpdateTimer += Time.deltaTime;
                 if (destinationUpdateTimer >= destinationUpdateInterval) {
                     destinationUpdateTimer = 0f;
-                    Vector3 closestPoint = GetClosestReachablePoint(targetPlayer.position);
+                    Vector3 closestPoint = GetClosestReachablePoint(target.position);
                     navMeshAgent.SetDestination(closestPoint);
                 }
-                if (IsPlayerUnreachableAbove()) {
+                if (IsTargetUnreachableAbove()) {
                     navMeshAgent.isStopped = true;
                     FaceTarget();
                 }
 
-                else if (distanceToTarget <= navMeshAgent.stoppingDistance) {
+                else if (distanceToTarget <= navMeshAgent.stoppingDistance && isAlerted) {
                     enemyState = EnemyState.Attacking;
                 }
                 else if (outOfRangeTimer >= chaseTimeout) {
@@ -161,20 +144,33 @@ public class EnemyController : MonoBehaviour {
         }
 
     }
-    bool CanSeePlayer() {
+
+    public void GotProvoked(Transform provoker) {
+        Debug.Log("Provoked by:" + provoker.name);
+        isProvoked = true;
+        target = provoker;
+        if (isAlerted) {
+            navMeshAgent.ResetPath();
+        }
+        else {
+            enemyState = EnemyState.Investigating;
+        }
+    }
+
+    void CanSeePlayer() {
 
         if (distanceToTarget <= viewRange) {
 
-            Vector3 directionToTarget = (targetPlayer.position - zombieHead.position).normalized;
+            Vector3 directionToTarget = (playerTarget.position - zombieHead.position).normalized;
             float angleBetweenTarget = Vector3.Angle(zombieHead.forward, directionToTarget);
 
             if (angleBetweenTarget < fovLimit / 2) {
-                if (!Physics.Linecast(zombieHead.position, targetPlayer.position + Vector3.up * 3f, playerLayer)) {
-                    return true;
+                if (!Physics.Linecast(zombieHead.position, playerTarget.position + Vector3.up * 3f, playerLayer)) {
+                    isAlerted = true;
+                    target = playerTarget;
                 }
             }
         }
-        return false;
     }
 
     void EngageTarget() {
@@ -189,7 +185,7 @@ public class EnemyController : MonoBehaviour {
         }
     }
 
- 
+
     void IdleBehaviour() {
         Debug.Log("Idle");
         StartCoroutine(PlaySoundAfterDelay(10f, idleSounds));
@@ -205,7 +201,7 @@ public class EnemyController : MonoBehaviour {
         GetComponent<Animator>().SetBool("attack", false);
         GetComponent<Animator>().SetBool("isMoving", true);
 
-        Vector3 targetPosition = GetClosestReachablePoint(targetPlayer.position);
+        Vector3 targetPosition = GetClosestReachablePoint(target.position);
         navMeshAgent.SetDestination(targetPosition);
     }
 
@@ -222,6 +218,7 @@ public class EnemyController : MonoBehaviour {
         Debug.Log("StopChase");
         GetComponent<Animator>().SetBool("isMoving", false);
         isProvoked = false;
+        isAlerted = false;
         navMeshAgent.ResetPath();
         navMeshAgent.isStopped = true;
         outOfRangeTimer = 0;
@@ -235,15 +232,15 @@ public class EnemyController : MonoBehaviour {
             soundPlayedOnce = false;
         }
     }
-    bool IsPlayerUnreachableAbove() {
+    bool IsTargetUnreachableAbove() {
 
         //Player horizontal distance check
         float horizontalDistance = Vector3.Distance(
             new Vector3(transform.position.x, 0, transform.position.z),
-            new Vector3(targetPlayer.position.x, 0, targetPlayer.position.z));
+            new Vector3(target.position.x, 0, target.position.z));
 
         //Player vertical height diff check
-        float heightDifference = targetPlayer.position.y - transform.position.y;
+        float heightDifference = target.position.y - transform.position.y;
 
         //CHeck if reacher destination
         bool reachedDestination = !navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance;
@@ -253,22 +250,23 @@ public class EnemyController : MonoBehaviour {
             reachedDestination;
     }
     void FaceTarget() {
-        Vector3 direction = (targetPlayer.position - transform.position).normalized;
+        Vector3 direction = (target.position - transform.position).normalized;
         Quaternion bodyRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, bodyRotation, Time.deltaTime * turnSpeed);
     }
 
     private void OnAnimatorIK(int layerIndex) {
-        if (targetPlayer != null) {
+        if (target != null) {
             Animator animator = GetComponent<Animator>();
 
             animator.SetLookAtWeight(lookAtWeight, bodyLookWeight, headLookWeight);
-            animator.SetLookAtPosition(targetPlayer.position);
+            animator.SetLookAtPosition(target.position);
         }
     }
 
     public void OnDamageTaken() {
         isProvoked = true;
+        target = playerTarget;
         enemyState = EnemyState.Chasing;
     }
     void AttackTarget() {

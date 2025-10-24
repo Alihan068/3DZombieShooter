@@ -10306,6 +10306,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8616685848737228372, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1337078180}
+    - targetCorrespondingSourceObject: {fileID: 8616685848737228372, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1337078185}
   m_SourcePrefab: {fileID: 100100000, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
 --- !u!4 &741735698 stripped
 Transform:
@@ -17913,6 +17916,18 @@ MonoBehaviour:
   - {fileID: 666284510}
   - {fileID: 1818041500}
   impactTime: 0.3
+--- !u!114 &1337078185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337078161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ea010c2f7cfc7c4984aee628d58597c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Provoker
 --- !u!1001 &1345768922
 PrefabInstance:
   m_ObjectHideFlags: 0

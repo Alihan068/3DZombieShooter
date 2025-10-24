@@ -40,7 +40,7 @@ public class EnemySpawner : MonoBehaviour
                 1, pos.z + randomDriection.y * randomDistance);
 
             Instantiate(EnemyPrefabs[Random.Range(0,EnemyPrefabs.Length)], randomPos, Quaternion.identity);
-            Debug.Log(randomPos);
+            //Debug.Log(randomPos);
             yield return new WaitForSeconds(spawnDelay);
         }
         Debug.Log("Spawn Sequence Done!");

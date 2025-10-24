@@ -20,6 +20,8 @@ public class WeaponPatternSO : ScriptableObject
     public int numberOfBursts = 1;
     public float timeBetweenShots = 0.5f;
     public bool isAutomatic = false;
+    public float provokeStrenght = 100f;
+    public LayerMask affectedLayers = ~0;
 
     public GameObject projectilePrefab;
 

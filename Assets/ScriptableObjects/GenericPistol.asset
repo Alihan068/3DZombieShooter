@@ -20,4 +20,8 @@ MonoBehaviour:
   numberOfBursts: 1
   timeBetweenShots: 1
   isAutomatic: 0
+  provokeStrenght: 100
+  affectedLayers:
+    serializedVersion: 2
+    m_Bits: 128
   projectilePrefab: {fileID: 0}
