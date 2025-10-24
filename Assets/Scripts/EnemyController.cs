@@ -49,7 +49,9 @@ public class EnemyController : MonoBehaviour {
     [SerializeField] AudioClip[] chaseSounds;
     [SerializeField] AudioClip[] idleSounds;
 
-    Transform target;
+
+    Transform targetPlayer;
+
     NavMeshAgent navMeshAgent;
     EnemyHealth enemyHealth;
 
@@ -62,7 +64,7 @@ public class EnemyController : MonoBehaviour {
     void OnEnable() {
         navMeshAgent = GetComponent<NavMeshAgent>();
         enemyHealth = GetComponent<EnemyHealth>();
-        target = FindFirstObjectByType<PlayerHealth>().transform;
+        targetPlayer = FindFirstObjectByType<PlayerHealth>().transform;
         audioSource = GetComponent<AudioSource>();
         StartCoroutine(PlaySoundAfterDelay(10f, idleSounds));
         enemyState = EnemyState.Chasing;
@@ -73,7 +75,7 @@ public class EnemyController : MonoBehaviour {
             enabled = false;
             navMeshAgent.enabled = false;
         }
-        distanceToTarget = Vector3.Distance(transform.position, target.position);
+        distanceToTarget = Vector3.Distance(transform.position, targetPlayer.position);
 
         //if (distanceToTarget >= viewRange) {
         //    outOfRangeTimer += Time.deltaTime;
@@ -126,7 +128,7 @@ public class EnemyController : MonoBehaviour {
                 destinationUpdateTimer += Time.deltaTime;
                 if (destinationUpdateTimer >= destinationUpdateInterval) {
                     destinationUpdateTimer = 0f;
-                    Vector3 closestPoint = GetClosestReachablePoint(target.position);
+                    Vector3 closestPoint = GetClosestReachablePoint(targetPlayer.position);
                     navMeshAgent.SetDestination(closestPoint);
                 }
                 if (IsPlayerUnreachableAbove()) {
@@ -163,11 +165,11 @@ public class EnemyController : MonoBehaviour {
 
         if (distanceToTarget <= viewRange) {
 
-            Vector3 directionToTarget = (target.position - zombieHead.position).normalized;
+            Vector3 directionToTarget = (targetPlayer.position - zombieHead.position).normalized;
             float angleBetweenTarget = Vector3.Angle(zombieHead.forward, directionToTarget);
 
             if (angleBetweenTarget < fovLimit / 2) {
-                if (!Physics.Linecast(zombieHead.position, target.position + Vector3.up * 3f, playerLayer)) {
+                if (!Physics.Linecast(zombieHead.position, targetPlayer.position + Vector3.up * 3f, playerLayer)) {
                     return true;
                 }
             }
@@ -203,7 +205,7 @@ public class EnemyController : MonoBehaviour {
         GetComponent<Animator>().SetBool("attack", false);
         GetComponent<Animator>().SetBool("isMoving", true);
 
-        Vector3 targetPosition = GetClosestReachablePoint(target.position);
+        Vector3 targetPosition = GetClosestReachablePoint(targetPlayer.position);
         navMeshAgent.SetDestination(targetPosition);
     }
 
@@ -238,10 +240,10 @@ public class EnemyController : MonoBehaviour {
         //Player horizontal distance check
         float horizontalDistance = Vector3.Distance(
             new Vector3(transform.position.x, 0, transform.position.z),
-            new Vector3(target.position.x, 0, target.position.z));
+            new Vector3(targetPlayer.position.x, 0, targetPlayer.position.z));
 
         //Player vertical height diff check
-        float heightDifference = target.position.y - transform.position.y;
+        float heightDifference = targetPlayer.position.y - transform.position.y;
 
         //CHeck if reacher destination
         bool reachedDestination = !navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance;
@@ -251,17 +253,17 @@ public class EnemyController : MonoBehaviour {
             reachedDestination;
     }
     void FaceTarget() {
-        Vector3 direction = (target.position - transform.position).normalized;
+        Vector3 direction = (targetPlayer.position - transform.position).normalized;
         Quaternion bodyRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, bodyRotation, Time.deltaTime * turnSpeed);
     }
 
     private void OnAnimatorIK(int layerIndex) {
-        if (target != null) {
+        if (targetPlayer != null) {
             Animator animator = GetComponent<Animator>();
 
             animator.SetLookAtWeight(lookAtWeight, bodyLookWeight, headLookWeight);
-            animator.SetLookAtPosition(target.position);
+            animator.SetLookAtPosition(targetPlayer.position);
         }
     }
 

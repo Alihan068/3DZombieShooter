@@ -18,6 +18,6 @@ MonoBehaviour:
   sprayFactor: 0.001
   numberOfProjectiles: 1
   numberOfBursts: 1
-  timeBetweenShots: 0.1
+  timeBetweenShots: 0.05
   isAutomatic: 1
   projectilePrefab: {fileID: 0}

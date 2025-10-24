@@ -37,8 +37,8 @@ public class EnemyHealth : MonoBehaviour {
         isDead = true;
         DropItems();
         audioSource.PlayOneShot(DeathClips[Random.Range(0, DeathClips.Length)]);
-        int value = Random.Range(1, 2);
-        GetComponent<Animator>().SetTrigger("death"+ value);
+
+        GetComponent<Animator>().SetTrigger("death");
         
     }
 
