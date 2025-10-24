@@ -350,7 +350,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1520237886077209663}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 9.01, y: 0, z: 54.93}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
@@ -376,7 +376,12 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'Root'\n\tTransform 'Elbow_R'\n\tTransform 'Ball_L'\n\tTransform
+    'Ball_R'\n\tTransform 'Clavicle_L'\n\tTransform 'Neck'\n\tTransform 'Elbow_L'\n\tTransform
+    'Head'\n\tTransform 'UpperLeg_L'\n\tTransform 'UpperLeg_R'\n\tand more ...\n\tFrom
+    animation clip 'zombieStandingDeath'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -416,6 +421,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   healthPoints: 100
+  ItemDropList:
+  - {fileID: 4669194618097466347, guid: 16e901b0c999ad547a0d919d477de370, type: 3}
+  - {fileID: 2942045241093771622, guid: 09d32bd2c7d485d458a00d4b4303466b, type: 3}
+  - {fileID: 1828089248795798702, guid: 226b06b4c363e74439ffee778bcf4881, type: 3}
+  - {fileID: 7338358249694197857, guid: afd3b29b54fb65947ae2a9f5327350b1, type: 3}
+  minDropChance: 0
+  luckMultiplier: 10
   takeDamageClips:
   - {fileID: 8300000, guid: 3bcaeb7205576a74ab6c3a4726f3aec4, type: 3}
   - {fileID: 8300000, guid: e76821815607bd94393fb24b0bd3df13, type: 3}
@@ -492,18 +504,18 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.5
+  m_Volume: 0.388
   m_Pitch: 0.54
   Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 93
+  Priority: 41
   DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 10
+  MinDistance: 2
+  MaxDistance: 15
   Pan2D: 0
-  rolloffMode: 2
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -513,20 +525,20 @@ AudioSource:
     - serializedVersion: 3
       time: 0.1
       value: 1
-      inSlope: -1.0703655
-      outSlope: -1.0703655
+      inSlope: -2.217427
+      outSlope: -2.217427
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.16493179
+      outWeight: 0.12177599
     - serializedVersion: 3
       time: 1
       value: 0.1
-      inSlope: -0.9601147
-      outSlope: -0.9601147
+      inSlope: -0.28969136
+      outSlope: -0.28969136
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.21821268
+      inWeight: 0.29927096
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -536,7 +548,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -551,7 +563,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

@@ -29407,53 +29407,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie_Biker_Male_01
       objectReference: {fileID: 0}
-    - target: {fileID: 5136414406832616689, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
-      propertyPath: minDropChance
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5136414406832616689, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
-      propertyPath: ItemDropList.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5136414406832616689, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
-      propertyPath: 'ItemDropList.Array.data[0]'
-      value: 
-      objectReference: {fileID: 4669194618097466347, guid: 16e901b0c999ad547a0d919d477de370, type: 3}
-    - target: {fileID: 5136414406832616689, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
-      propertyPath: 'ItemDropList.Array.data[1]'
-      value: 
-      objectReference: {fileID: 2942045241093771622, guid: 09d32bd2c7d485d458a00d4b4303466b, type: 3}
-    - target: {fileID: 5136414406832616689, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
-      propertyPath: 'ItemDropList.Array.data[2]'
-      value: 
-      objectReference: {fileID: 1828089248795798702, guid: 226b06b4c363e74439ffee778bcf4881, type: 3}
-    - target: {fileID: 5136414406832616689, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
-      propertyPath: 'ItemDropList.Array.data[3]'
-      value: 
-      objectReference: {fileID: 7338358249694197857, guid: afd3b29b54fb65947ae2a9f5327350b1, type: 3}
     - target: {fileID: 5571674699383958673, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
-      propertyPath: rolloffCustomCurve.m_Curve.Array.data[0].inSlope
-      value: -2.217427
-      objectReference: {fileID: 0}
-    - target: {fileID: 5571674699383958673, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
-      propertyPath: rolloffCustomCurve.m_Curve.Array.data[1].inSlope
-      value: -0.28969136
-      objectReference: {fileID: 0}
-    - target: {fileID: 5571674699383958673, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
-      propertyPath: rolloffCustomCurve.m_Curve.Array.data[0].outSlope
-      value: -2.217427
-      objectReference: {fileID: 0}
-    - target: {fileID: 5571674699383958673, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
-      propertyPath: rolloffCustomCurve.m_Curve.Array.data[1].inWeight
-      value: 0.29927096
-      objectReference: {fileID: 0}
-    - target: {fileID: 5571674699383958673, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
-      propertyPath: rolloffCustomCurve.m_Curve.Array.data[1].outSlope
-      value: -0.28969136
-      objectReference: {fileID: 0}
-    - target: {fileID: 5571674699383958673, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
-      propertyPath: rolloffCustomCurve.m_Curve.Array.data[0].outWeight
-      value: 0.12177599
+      propertyPath: MaxDistance
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 5805985974555718839, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
       propertyPath: m_LocalPosition.x
@@ -29493,14 +29449,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5805985974555718839, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5927702906564659424, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
-      propertyPath: m_AnimatePhysics
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5927702906564659424, guid: 0b9a8d013f5672649acdb15f931f7360, type: 3}
-      propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

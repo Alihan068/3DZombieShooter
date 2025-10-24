@@ -13,13 +13,14 @@ public class Grenade : MonoBehaviour {
     [SerializeField] LayerMask affectedLayers = ~0;
 
     [Header("Effects")]
-    [SerializeField] GameObject explosionEffectPrefab;
+   
     [SerializeField] AudioClip explosionSfx;
     [SerializeField] float destroyAfter = 5f;
-
+    ParticleSystem explosionEffectPrefab;
     AudioSource audioSource;
 
     void OnEnable() {
+        explosionEffectPrefab = GetComponentInChildren<ParticleSystem>();
         audioSource = GetComponent<AudioSource>();
         StartCoroutine(DetonateAfterDelay());
         //Debug.Log("Summoned Grenade");
@@ -37,16 +38,16 @@ public class Grenade : MonoBehaviour {
     IEnumerator Explode() {
         //Debug.Log("Fusetime Finished, Explode!");
         Vector3 currentPos = transform.position;
+     
 
         if (explosionEffectPrefab != null) {
-            var fx = Instantiate(explosionEffectPrefab, currentPos, Quaternion.identity);
-            Destroy(fx, destroyAfter);
+            explosionEffectPrefab.Play();
         }
-
         if (explosionSfx != null && audioSource != null) {
             audioSource.PlayOneShot(explosionSfx);
         }
         else if (explosionSfx != null) {
+
             AudioSource.PlayClipAtPoint(explosionSfx, currentPos);
         }
 
