@@ -58,6 +58,11 @@ public class Grenade : MonoBehaviour {
             EnemyHealth enemyHealth = col.GetComponent<EnemyHealth>();
             if (enemyHealth != null) {
                 enemyHealth.TakeDamage(damage);
+
+            PlayerHealth playerHealth = col.GetComponent<PlayerHealth>();
+                if (playerHealth != null) { 
+                playerHealth.TakeDamage(damage/2);
+                }
             }
         }
 

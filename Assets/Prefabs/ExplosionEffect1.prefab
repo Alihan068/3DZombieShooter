@@ -5068,7 +5068,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5330444274011829619}
-  - component: {fileID: 5393331421464841174}
   m_Layer: 0
   m_Name: Impulse Source
   m_TagString: Untagged
@@ -5091,59 +5090,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1759695250777838270}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5393331421464841174
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4194467956340074033}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ImpulseDefinition:
-    ImpulseChannel: 1
-    ImpulseShape: 3
-    CustomImpulseShape:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    ImpulseDuration: 0.5
-    ImpulseType: 1
-    DissipationRate: 0.65
-    RawSignal: {fileID: 0}
-    AmplitudeGain: 1
-    FrequencyGain: 1
-    RepeatMode: 0
-    Randomize: 1
-    TimeEnvelope:
-      AttackShape:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      DecayShape:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      AttackTime: 0
-      SustainTime: 0.2
-      DecayTime: 0.7
-      ScaleWithImpact: 1
-      HoldForever: 0
-    ImpactRadius: 100
-    DirectionMode: 0
-    DissipationMode: 2
-    DissipationDistance: 40
-    PropagationSpeed: 343
-  DefaultVelocity: {x: 0, y: -0.05, z: 0}
 --- !u!1 &9019214888860704884
 GameObject:
   m_ObjectHideFlags: 0
