@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponPatternSO
   weaponType: 0
   range: 200
-  damage: 10
+  damage: 30
   sprayFactor: 0.001
   numberOfProjectiles: 1
   numberOfBursts: 1
   timeBetweenShots: 0.05
   isAutomatic: 1
-  provokeStrenght: 100
+  provokeStrenght: 70
   affectedLayers:
     serializedVersion: 2
     m_Bits: 128

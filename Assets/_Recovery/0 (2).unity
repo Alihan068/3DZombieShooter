@@ -6988,7 +6988,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &496876175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10298,10 +10298,7 @@ PrefabInstance:
       insertIndex: 2
       addedObject: {fileID: 1337078173}
     - targetCorrespondingSourceObject: {fileID: 8616685848737228372, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
-      insertIndex: 3
-      addedObject: {fileID: 1337078190}
-    - targetCorrespondingSourceObject: {fileID: 8616685848737228372, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
-      insertIndex: 6
+      insertIndex: 5
       addedObject: {fileID: 1337078167}
     - targetCorrespondingSourceObject: {fileID: 8616685848737228372, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       insertIndex: -1
@@ -17931,21 +17928,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ea010c2f7cfc7c4984aee628d58597c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Provoker
---- !u!114 &1337078190
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1337078161}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e84df5d5fae4084fb91eda0f5f55c67, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerMoveEffects
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 128
 --- !u!1001 &1345768922
 PrefabInstance:
   m_ObjectHideFlags: 0

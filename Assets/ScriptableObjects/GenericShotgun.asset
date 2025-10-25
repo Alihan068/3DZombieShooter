@@ -20,7 +20,7 @@ MonoBehaviour:
   numberOfBursts: 1
   timeBetweenShots: 0.5
   isAutomatic: 0
-  provokeStrenght: 100
+  provokeStrenght: 70
   affectedLayers:
     serializedVersion: 2
     m_Bits: 128

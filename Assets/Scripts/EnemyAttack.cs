@@ -6,8 +6,6 @@ public class EnemyAttack : MonoBehaviour {
     PlayerHealth target;
     [SerializeField] AudioClip[] attackClips;
     AudioSource audioManager;
-    
-
     private void Start() {
         target = FindFirstObjectByType<PlayerHealth>();
         audioManager = GetComponent<AudioSource>();
