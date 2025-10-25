@@ -7,7 +7,7 @@ using UnityEngine.AI;
 public enum EnemyState {
     Idle,
     PursuePlayer,
-    Attacking,
+    AttackingCase,
     Investigating
 }
 
@@ -17,7 +17,7 @@ public class EnemyController : MonoBehaviour {
 
     [SerializeField] float viewRange = 10f;
     [SerializeField] float pursueTimeOut = 10f;
-    [SerializeField] float investigateTimeout = 5f;
+    //[SerializeField] float investigateTimeout = 5f;
 
     [SerializeField] float jumpAttackDistance = 3f;
     [SerializeField] float heightDifferenceTreshHold = 1.5f;
@@ -25,13 +25,13 @@ public class EnemyController : MonoBehaviour {
     [SerializeField] float destinationUpdateInterval = 0.5f;
 
     [SerializeField] float hearingDistance = 10f;
-    [SerializeField] float InvestigationTime = 5f;
+    //[SerializeField] float InvestigationTime = 5f;
     [SerializeField] float fovLimit = 90f;
 
     [SerializeField] LayerMask playerLayer;
 
     [SerializeField] float turnSpeed = 5f;
-    float outOfInvestigationTimer = 0f;
+    //float outOfInvestigationTimer = 0f;
     float outOfRangeTimer = 0f;
     bool isProvoked = false;
 
@@ -52,7 +52,7 @@ public class EnemyController : MonoBehaviour {
     Transform playerTarget;
     Transform investigationPoint;
     Transform target;
-
+    Animator animator;
     NavMeshAgent navMeshAgent;
     EnemyHealth enemyHealth;
 
@@ -65,6 +65,8 @@ public class EnemyController : MonoBehaviour {
     float distanceToPlayer = Mathf.Infinity;
 
     void OnEnable() {
+        animator = GetComponent<Animator>();
+        Debug.Log(animator);
         navMeshAgent = GetComponent<NavMeshAgent>();
         enemyHealth = GetComponent<EnemyHealth>();
         playerTarget = FindFirstObjectByType<PlayerHealth>().transform;
@@ -74,7 +76,7 @@ public class EnemyController : MonoBehaviour {
     }
 
     void Update() {
-
+        Debug.Log("CurrentState: " + enemyState);
         Debug.Log("isAlerted: "+ isAlerted);
         if (enemyHealth.IsDead()) {
             enabled = false;
@@ -140,15 +142,15 @@ public class EnemyController : MonoBehaviour {
 
             case EnemyState.PursuePlayer:
                 //navMeshAgent.ResetPath();
-                ChaseTarget(playerTarget);
-                Debug.Log(this.name + " Pursue!");
                 isAlerted = true;
+                target = playerTarget;
+                ChaseTarget(playerTarget);
                 
 
                 destinationUpdateTimer += Time.deltaTime;
                 if (destinationUpdateTimer >= destinationUpdateInterval) {
                     destinationUpdateTimer = 0f;
-                    Vector3 closestPoint = GetClosestReachablePoint(target.position);
+                    Vector3 closestPoint = GetClosestReachablePoint(playerTarget.position);
                     navMeshAgent.SetDestination(closestPoint);
                 }
                 if (IsTargetUnreachableAbove()) {
@@ -156,8 +158,9 @@ public class EnemyController : MonoBehaviour {
                     FaceTarget(target);
                 }
 
-                else if (distanceToTarget <= navMeshAgent.stoppingDistance && isAlerted) {
-                    enemyState = EnemyState.Attacking;
+                else if (distanceToPlayer <= navMeshAgent.stoppingDistance) {
+                    enemyState = EnemyState.AttackingCase;
+                    Debug.Log("Switch to attacking case");
                 }
                 else if (outOfRangeTimer >= pursueTimeOut) {
                     StopPursue();
@@ -169,11 +172,14 @@ public class EnemyController : MonoBehaviour {
 
                 break;
 
-            case EnemyState.Attacking:
+            case EnemyState.AttackingCase:
+                Debug.Log("Attacking Case Functions");
 
-                FaceTarget(target);
+                FaceTarget(playerTarget);
+
                 AttackTarget();
-                if (distanceToTarget >= navMeshAgent.stoppingDistance) {
+
+                if (distanceToPlayer >= navMeshAgent.stoppingDistance) {
                     enemyState = EnemyState.PursuePlayer;
                 }
                 break;
@@ -182,7 +188,7 @@ public class EnemyController : MonoBehaviour {
     }
 
     public void GotProvoked(Transform provoker) {
-        if (enemyState == EnemyState.PursuePlayer || enemyState == EnemyState.Attacking) return;
+        if (enemyState == EnemyState.PursuePlayer || enemyState == EnemyState.AttackingCase) return;
 
         Vector3 soundSourcePosition = provoker.position;
 
@@ -194,7 +200,7 @@ public class EnemyController : MonoBehaviour {
         investigationPoint.position = soundSourcePosition;
         target = investigationPoint;
 
-        Debug.Log("Provoked by: " + provoker.name + " at position: " + soundSourcePosition);
+        //Debug.Log("Provoked by: " + provoker.name + " at position: " + soundSourcePosition);
         isProvoked = true;
 
         if (isAlerted) {
@@ -206,38 +212,40 @@ public class EnemyController : MonoBehaviour {
     }
 
     void CheckIfPlayerInsight() {
-        if (distanceToPlayer <= viewRange) {
+        if (enemyState != EnemyState.PursuePlayer  &&  enemyState != EnemyState.AttackingCase) {
+            if (distanceToPlayer <= viewRange) {
 
-            Vector3 directionToTarget = (playerTarget.position - zombieHead.position).normalized;
-            float angleBetweenTarget = Vector3.Angle(zombieHead.forward, directionToTarget);
+                Vector3 directionToTarget = (playerTarget.position - zombieHead.position).normalized;
+                float angleBetweenTarget = Vector3.Angle(zombieHead.forward, directionToTarget);
 
-            if (angleBetweenTarget < fovLimit / 2) {
-                if (!Physics.Linecast(zombieHead.position, playerTarget.position + Vector3.up * 3f, playerLayer)) {
-                    enemyState = EnemyState.PursuePlayer;
-                    Debug.Log(this.name + " Saw player!");
-                    target = playerTarget;
+                if (angleBetweenTarget < fovLimit / 2) {
+                    if (!Physics.Linecast(zombieHead.position, playerTarget.position + Vector3.up * 3f, playerLayer)) {
+                        enemyState = EnemyState.PursuePlayer;
+                        Debug.Log(this.name + " Saw player!");
+                        target = playerTarget;
+                    }
                 }
             }
         }
     }
 
     void IdleBehaviour() {
-        Debug.Log("Idle");
         StartCoroutine(PlaySoundAfterDelay(10f, idleSounds));
-        outOfInvestigationTimer = 0;
+        //outOfInvestigationTimer = 0;
         outOfRangeTimer = 0;
 
     }
-    void ChaseTarget(Transform target) {
-
-        Debug.Log("Chase!");
-        outOfInvestigationTimer = 0;
+    void ChaseTarget(Transform currentTarget) {
+        //outOfInvestigationTimer = 0;
         StartCoroutine(PlaySoundAfterDelay(10f, chaseSounds));
         navMeshAgent.isStopped = false;
-        GetComponent<Animator>().SetBool("attack", false);
-        GetComponent<Animator>().SetBool("isMoving", true);
+        animator.SetBool("isAttacking", false);
+        if (!animator.GetBool("isMoving")) {
+            Debug.Log("Set IsMoving!");
+            animator.SetBool("isMoving", true);
+        }
 
-        Vector3 targetPosition = GetClosestReachablePoint(target.position);
+        Vector3 targetPosition = GetClosestReachablePoint(currentTarget.position);
         navMeshAgent.SetDestination(targetPosition);
     }
 
@@ -253,12 +261,13 @@ public class EnemyController : MonoBehaviour {
     void StopPursue() {
         Debug.Log("StopPursue");
         enemyState = EnemyState.Idle;
-        GetComponent<Animator>().SetBool("isMoving", false);
+        animator.SetBool("isMoving", false);
         isProvoked = false;
         isAlerted = false;
         navMeshAgent.ResetPath();
         navMeshAgent.isStopped = true;
         outOfRangeTimer = 0;
+        target = null;
     }
     IEnumerator PlaySoundAfterDelay(float delay, AudioClip[] clip) {
         if (!soundPlayedOnce) {
@@ -307,7 +316,8 @@ public class EnemyController : MonoBehaviour {
         enemyState = EnemyState.PursuePlayer;
     }
     void AttackTarget() {
-        GetComponent<Animator>().SetBool("attack", true);
+        Debug.Log("AttackTarget Void Activated");
+        animator.SetBool("isAttacking", true);
         //Debug.Log(name + (" found and attacking " + target.name));
     }
 

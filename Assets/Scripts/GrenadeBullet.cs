@@ -15,7 +15,7 @@ public class Grenade : MonoBehaviour {
     [Header("Effects")]
    
     [SerializeField] AudioClip explosionSfx;
-    [SerializeField] float destroyAfter = 5f;
+    //[SerializeField] float destroyAfter = 5f;
     [SerializeField] GameObject explosionEffectPrefab;
     AudioSource audioSource;
 

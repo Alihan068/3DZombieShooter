@@ -9,12 +9,13 @@ public class EnemyHealth : MonoBehaviour {
     [SerializeField] float luckMultiplier = 10;
     [SerializeField] AudioClip[] takeDamageClips;
     [SerializeField] AudioClip[] DeathClips;
-  
+    Animator animator;
 
     bool isDead = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start() {
         audioSource = GetComponent<AudioSource>();
+        animator = GetComponent<Animator>();
     }
     public void TakeDamage(float damage) {
 
@@ -24,8 +25,10 @@ public class EnemyHealth : MonoBehaviour {
 
         if (healthPoints <= 0) {
             Die();
+            return;
         }
         audioSource.PlayOneShot(takeDamageClips[Random.Range(0, takeDamageClips.Length)]);
+        animator.SetTrigger("hit");
     }
 
     public bool IsDead() {
@@ -38,7 +41,7 @@ public class EnemyHealth : MonoBehaviour {
         DropItems();
         audioSource.PlayOneShot(DeathClips[Random.Range(0, DeathClips.Length)]);
 
-        GetComponent<Animator>().SetTrigger("death");
+        animator.SetTrigger("death");
         
     }
 
