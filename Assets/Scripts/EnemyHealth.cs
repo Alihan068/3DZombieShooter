@@ -42,6 +42,7 @@ public class EnemyHealth : MonoBehaviour {
         audioSource.PlayOneShot(DeathClips[Random.Range(0, DeathClips.Length)]);
 
         animator.SetTrigger("death");
+        Destroy(this, 4f);
         
     }
 
