@@ -18,7 +18,7 @@ MonoBehaviour:
   sprayFactor: 0
   numberOfProjectiles: 1
   numberOfBursts: 1
-  timeBetweenShots: 1
+  timeBetweenShots: 0.5
   isAutomatic: 0
   provokeStrenght: 70
   affectedLayers:
